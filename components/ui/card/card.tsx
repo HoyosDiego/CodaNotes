@@ -12,7 +12,7 @@ export const Card = ({
   return <View style={[{ ...styles.container }, className]}>{children}</View>;
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
   container: {
     flex: 1,
     borderRadius: 8,

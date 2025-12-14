@@ -31,10 +31,11 @@ export const ColorOpacity = (color: string, opacity: number): string => {
 
 export const Colors = {
   background: "#fff",
+  blackColor: "000000",
   blueColor: "#0a7ea4",
   grayColor: "#363535ff",
   greenColor: "#179206",
-  icon: "#687076",
+  icon: "#FF8E0C",
   mainColor: "#FF8E0C",
   tabIconDefault: "#687076",
   tabIconSelected: tintColorLight,

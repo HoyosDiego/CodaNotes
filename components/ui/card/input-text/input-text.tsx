@@ -34,7 +34,7 @@ export function InputText({
         ]}
         placeholderTextColor={Colors.icon}
         autoCapitalize="none"
-        placeholder="Buscar"
+        placeholder="Buscar" 
         {...rest}
       />
       {showIconSearch && (

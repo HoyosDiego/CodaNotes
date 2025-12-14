@@ -1,4 +1,4 @@
-import { Colors } from "@/constants";
+import { ColorOpacity, Colors } from "@/constants";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -9,15 +9,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     flexDirection: "row",
-    height: 50,
+    height: 30,
   },
   input: {
     backgroundColor: "transparent",
     borderColor: "transparent",
     borderRadius: 8,
     borderWidth: 0,
-    color: Colors.text,
-    fontSize: 16,
+    color: ColorOpacity(Colors.blackColor, 80),
+    fontSize: 11,
     paddingHorizontal: 16,
   },
   inputWithIconPadding: {

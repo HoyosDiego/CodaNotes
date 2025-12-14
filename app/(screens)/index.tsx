@@ -1,6 +1,6 @@
 import { CardUserInformation } from "@/components/card-user-information";
 import ThemedScrollContainer from "@/components/themed-scroll-container";
-import { InputText } from "@/components/ui/card/input-text/input-text";
+import { InputText } from "@/components/ui";
 import { ColorOpacity, Colors } from "@/constants";
 
 import { StyleSheet, View } from "react-native";

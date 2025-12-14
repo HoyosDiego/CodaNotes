@@ -2,7 +2,7 @@ import { Colors } from "@/constants";
 import { Image } from "expo-image";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Card } from "../ui/card";
+import { Card } from "../ui";
 import { ICardUserInformationProps } from "./card-user-information.types";
 
 export function CardUserInformation({ user }: ICardUserInformationProps) {

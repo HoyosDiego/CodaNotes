@@ -8,7 +8,7 @@ interface ICardProps {
 export const Card = ({
   className,
   children,
-}: PropsWithChildren<ICardProps>) => {
+}: PropsWithChildren<ICardProps>) => { 
   return <View style={[{ ...styles.container }, className]}>{children}</View>;
 };
 

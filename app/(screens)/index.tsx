@@ -2,20 +2,35 @@ import { CardUserInformation } from "@/components/card-user-information";
 import ThemedScrollContainer from "@/components/themed-scroll-container";
 import { InputText } from "@/components/ui";
 import { ColorOpacity, Colors } from "@/constants";
+import { useDebouncedSearch } from "@/hooks/useDebouncedSearch";
+import { useCallback, useState } from "react";
 
 import { StyleSheet, View } from "react-native";
 
+const user = {
+  name: "Diego",
+  lastName: "Hoyossssssssss",
+  points: 1500,
+};
+
 export default function HomeScreen() {
-  const user = {
-    name: "Diego",
-    lastName: "Hoyos",
-    points: 1500,
-  };
+  const [searchText, setSearchText] = useState("");
+
+  const executeSearch = useCallback(() => {
+    console.log("DEBOUNCED SEARCH EXECUTED for: ", searchText);
+  }, [searchText]);
+
+  useDebouncedSearch(executeSearch, 500, searchText);
+
   return (
     <ThemedScrollContainer style={styles.scrollContainer}>
       <View style={styles.containerHome}>
         <CardUserInformation user={user} />
-        <InputText placeholder="Diego" containerStyle={styles.textInputStyle} />
+        <InputText
+          placeholder="Buscar por nombre o descripción"
+          containerStyle={styles.textInputStyle}
+          onChangeText={setSearchText}
+        />
       </View>
     </ThemedScrollContainer>
   );

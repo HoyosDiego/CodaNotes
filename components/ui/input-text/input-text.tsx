@@ -1,20 +1,21 @@
 import { Colors } from "@/constants";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { memo } from "react";
 import {
-    StyleProp,
-    StyleSheet,
-    TextInput,
-    TextInputProps,
-    TouchableOpacity,
-    View,
-    ViewStyle,
+  StyleProp,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from "react-native";
+import styles from "./input-text.styles";
 
 interface ITextInputProps extends TextInputProps {
   showIconSearch?: boolean;
   onSearchPress?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
+  onChangeText?: (text: string) => void;
 }
 
 export function InputText({
@@ -22,10 +23,11 @@ export function InputText({
   onSearchPress,
   showIconSearch = true,
   style,
+  onChangeText,
   ...rest
 }: ITextInputProps) {
-  return ( 
-    <View style={[styles.container, containerStyle]}> 
+  return (
+    <View style={[styles.container, containerStyle]}>
       <TextInput
         style={[
           styles.input,
@@ -35,6 +37,7 @@ export function InputText({
         placeholderTextColor={Colors.icon}
         autoCapitalize="none"
         placeholder="Buscar"
+        onChangeText={onChangeText}
         {...rest}
       />
       {showIconSearch && (
@@ -46,32 +49,4 @@ export function InputText({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    backgroundColor: Colors.background,
-    borderColor: Colors.tabIconDefault,
-    borderRadius: 8,
-    borderWidth: 1,
-    flexDirection: "row",
-    height: 50,
-  },
-  input: {
-    backgroundColor: "transparent",
-    borderColor: "transparent",
-    borderRadius: 8,
-    borderWidth: 0,
-    color: Colors.text,
-    fontSize: 16,
-    paddingHorizontal: 16,
-  },
-  inputWithIconPadding: {
-    flex: 1,
-  },
-  iconContainer: {
-    height: "100%",
-    width: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
+export default memo(InputText);

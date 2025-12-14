@@ -10,13 +10,34 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "react-native",
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|@react-native|@react-navigation|expo|@unimodules|sentry-expo|react-native-svg)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/android/",
+      "/ios/"
+    ],
+    "collectCoverage": false,
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    }
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
+    "@testing-library/react-native": "^13.3.3",
+    "D": "^1.0.0",
     "expo": "~54.0.29",
     "expo-constants": "~18.0.12",
     "expo-dev-client": "~6.0.20",
@@ -44,11 +65,16 @@
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
+    "@testing-library/jest-native": "^5.4.3",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
+    "@types/react-test-renderer": "^19.1.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
     "husky": "^9.1.7",
+    "jest": "^30.2.0",
     "lint-staged": "^16.2.7",
+    "react-test-renderer": "^19.1.0",
     "typescript": "~5.9.2"
   },
   "private": true

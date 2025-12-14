@@ -25,7 +25,7 @@ export function InputText({
   ...rest
 }: ITextInputProps) {
   return ( 
-    <View style={[styles.container, containerStyle]}>
+    <View style={[styles.container, containerStyle]}> 
       <TextInput
         style={[
           styles.input,

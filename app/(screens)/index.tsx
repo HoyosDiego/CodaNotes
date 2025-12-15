@@ -22,6 +22,10 @@ export default function HomeScreen() {
     return notes.length ?? 0;
   }, [notes]);
 
+  const userResolved = useMemo(() => {
+    return user ?? { id: 0, name: "Usuario", lastname: "no registrado" };
+  }, [user]);
+
   if (!isLoaded) {
     return (
       <View style={styles.loadingContainer}>
@@ -45,7 +49,7 @@ export default function HomeScreen() {
   return (
     <ThemedScrollContainer style={styles.scrollContainer}>
       <View style={styles.containerHome}>
-        <CardUserInformation user={user} qtyNotes={quantityNotes} />
+        <CardUserInformation user={userResolved} qtyNotes={quantityNotes} />
 
         <InputText
           placeholder="Buscar por nombre o descripción"

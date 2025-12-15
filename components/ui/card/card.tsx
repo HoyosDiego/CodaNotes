@@ -8,11 +8,11 @@ interface ICardProps {
 export const Card = ({
   className,
   children,
-}: PropsWithChildren<ICardProps>) => { 
+}: PropsWithChildren<ICardProps>) => {
   return <View style={[{ ...styles.container }, className]}>{children}</View>;
 };
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     borderRadius: 8,

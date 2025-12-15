@@ -11,6 +11,12 @@ module.exports = defineConfig([
   {
     files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
     rules: {
+      "no-console": [
+        "error",
+        {
+          allow: ["error", "warn"],
+        },
+      ],
       "no-restricted-syntax": [
         "error",
         {

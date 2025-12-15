@@ -2,8 +2,7 @@ import { CardUserInformation } from "@/components/card-user-information";
 import ThemedScrollContainer from "@/components/themed-scroll-container";
 import { InputText } from "@/components/ui";
 import { ColorOpacity, Colors } from "@/constants";
-import { useDebouncedSearch } from "@/hooks/useDebouncedSearch";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 import { StyleSheet, View } from "react-native";
 
@@ -16,12 +15,13 @@ const user = {
 export default function HomeScreen() {
   const [searchText, setSearchText] = useState("");
 
-  const executeSearch = useCallback(() => {
+  //Disabled for while search user by jotai (jotai: state to manage information)
+  /*   const executeSearch = useCallback(() => {
     console.log("DEBOUNCED SEARCH EXECUTED for: ", searchText);
-  }, [searchText]);
+  }, [searchText]); */
 
-  useDebouncedSearch(executeSearch, 500, searchText);
-
+  /*  useDebouncedSearch(executeSearch, 500, searchText);
+   */
   return (
     <ThemedScrollContainer style={styles.scrollContainer}>
       <View style={styles.containerHome}>

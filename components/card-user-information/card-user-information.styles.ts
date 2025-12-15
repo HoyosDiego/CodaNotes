@@ -34,17 +34,13 @@ export const styles = StyleSheet.create({
     marginVertical: 20,
   },
   imageContainer: {
+    alignItems: "center",
     backgroundColor: Colors.whiteColor,
     borderColor: Colors.greenColor,
     borderRadius: 50,
     borderWidth: 2,
     height: 60,
-    justifyContent: "center",
-    lineHeight: 60,
-    width: 60,
-  },
-  imageStyles: {
-    height: 60,
+    justifyContent: "center", 
     width: 60,
   },
   nameStyle: {
@@ -53,18 +49,22 @@ export const styles = StyleSheet.create({
     fontWeight: "800",
     width: "80%",
   },
-  points: {
+  notesContainer: {
+    marginTop: 40,
+  },
+  notesText: {
+    color: Colors.whiteColor,
+    fontSize: 11,
+    fontWeight: "700",
+  },
+  qtyNotes: {
     color: Colors.whiteColor,
     fontSize: 16,
     fontWeight: "700",
   },
-  pointsContainer: {
-    marginTop: 40,
-  },
-  pointsText: {
-    color: Colors.whiteColor,
-    fontSize: 11,
-    fontWeight: "700",
+  qtyNotesContainer: {
+    flexDirection: "row",
+    columnGap: 4,
   },
   secondContainer: {
     flex: 0.2,

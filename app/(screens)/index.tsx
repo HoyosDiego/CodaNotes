@@ -2,30 +2,55 @@ import { CardUserInformation } from "@/components/card-user-information";
 import ThemedScrollContainer from "@/components/themed-scroll-container";
 import { InputText } from "@/components/ui";
 import { ColorOpacity, Colors } from "@/constants";
-import { useState } from "react";
+import { notesListAtom } from "@/state";
 
-import { StyleSheet, View } from "react-native";
+import { isDbLoadedAtom } from "@/state/ui/uiAtoms";
+import { userAtom } from "@/state/user/userAtoms";
+import { useAtomValue } from "jotai";
 
-const user = {
-  name: "Diego",
-  lastName: "Hoyossssssssss",
-  points: 1500,
-};
+import { useMemo, useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
   const [searchText, setSearchText] = useState("");
 
-  //Disabled for while search user by jotai (jotai: state to manage information)
-  /*   const executeSearch = useCallback(() => {
-    console.log("DEBOUNCED SEARCH EXECUTED for: ", searchText);
-  }, [searchText]); */
+  const user = useAtomValue(userAtom);
+  const notes = useAtomValue(notesListAtom);
+  const isLoaded = useAtomValue(isDbLoadedAtom);
 
-  /*  useDebouncedSearch(executeSearch, 500, searchText);
-   */
+  const quantityNotes = useMemo(() => {
+    return notes.length ?? 0;
+  }, [notes]);
+
+  const userResolved = useMemo(() => {
+    return user ?? { id: 0, name: "Usuario", lastname: "no registrado" };
+  }, [user]);
+
+  if (!isLoaded) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.mainColor} />
+        <Text style={styles.loadingText}>Consultando usuario y datos...</Text>
+      </View>
+    );
+  }
+
+  if (!user) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.errorText}>
+          ⚠️ Error: No se pudo encontrar el usuario. Verifica la DB o la función
+          getUser.
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <ThemedScrollContainer style={styles.scrollContainer}>
       <View style={styles.containerHome}>
-        <CardUserInformation user={user} />
+        <CardUserInformation user={userResolved} qtyNotes={quantityNotes} />
+
         <InputText
           placeholder="Buscar por nombre o descripción"
           containerStyle={styles.textInputStyle}
@@ -40,6 +65,22 @@ const styles = StyleSheet.create({
   containerHome: {
     flexDirection: "column",
     rowGap: 20,
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+    padding: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.whiteColor,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: Colors.grayColor,
   },
   scrollContainer: {
     paddingHorizontal: 10,

@@ -1,31 +1,43 @@
-import { Image } from "expo-image";
+import { Colors } from "@/constants";
+import { Ionicons } from "@expo/vector-icons";
 import React, { memo } from "react";
 import { Text, View } from "react-native";
 import { Card } from "../ui";
 import { styles } from "./card-user-information.styles";
 import { ICardUserInformationProps } from "./card-user-information.types";
 
-export function CardUserInformation({ user }: ICardUserInformationProps) {
+export function CardUserInformation({
+  user,
+  qtyNotes,
+}: ICardUserInformationProps) {
   return (
     <View style={styles.containerCards}>
       <Card className={styles.containerCard}>
         <View style={styles.contentCard}>
           <View style={styles.firstContainer}>
             <Text style={styles.nameStyle} numberOfLines={1}>
-              {user?.name} {user?.lastName}
+              {user?.name} {user?.lastname}
             </Text>
-            <View style={styles.pointsContainer}>
-              <Text style={styles.points}>{user?.points}</Text>
-              <Text style={styles.pointsText}>Puntos</Text>
+            <View style={styles.notesContainer}>
+              <View style={styles.qtyNotesContainer}>
+                <Text style={styles.qtyNotes}>{qtyNotes}</Text>
+                <Ionicons
+                  name="checkmark-circle"
+                  color={Colors.greenColor}
+                  size={18}
+                />
+              </View>
+              <Text style={styles.notesText}>Notas agregadas</Text>
             </View>
           </View>
           <View style={styles.secondContainer}>
-            <Text style={styles.imageContainer}>
-              <Image
-                source={require("@/assets/images/react-logo.png")}
-                style={styles.imageStyles}
+            <View style={styles.imageContainer}>
+              <Ionicons
+                name="person-outline"
+                color={Colors.grayColor}
+                size={45}
               />
-            </Text>
+            </View>
           </View>
         </View>
       </Card>

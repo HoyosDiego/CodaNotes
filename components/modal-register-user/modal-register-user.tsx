@@ -110,19 +110,19 @@ const styles = StyleSheet.create({
   btn: {
     height: 56,
     borderRadius: 16,
+    backgroundColor: 'transparent',
     justifyContent: "center",
     alignItems: "center",
   },
   btnSave: {
     backgroundColor: ColorOpacity(Colors.mainColor, 90),
-    elevation: 10,
-    overflow: Platform.OS === "android" ? "hidden" : "visible",
+    overflow: "visible",
     shadowColor: Colors.blackColor,
     shadowOffset: {
       width: 0,
       height: 8,
     },
-    shadowOpacity: 0.35,
+    shadowOpacity: 0.5,
     shadowRadius: 12,
   },
   btnTextSave: {

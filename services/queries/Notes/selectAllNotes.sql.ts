@@ -1,3 +1,3 @@
 export const SELECT_ALL_NOTES = `
-    SELECT id, name, lastname FROM users;
+    SELECT id, title, content, bgcolor FROM notes;
 `;

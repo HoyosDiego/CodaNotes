@@ -3,6 +3,7 @@ export const CREATE_NOTES_TABLE = `
         id INTEGER PRIMARY KEY,         
         title TEXT NOT NULL, 
         content TEXT NOT NULL, 
+        bgcolor TEXT NOT NULL,
         timestamp INTEGER NOT NULL
     );
 `;

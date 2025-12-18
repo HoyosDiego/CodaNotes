@@ -1,30 +1,53 @@
 import { CardUserInformation } from "@/components/card-user-information";
+import DescriptionNote from "@/components/desciption-note/description-note";
+import { UserModal } from "@/components/modal-register-user";
 import ThemedScrollContainer from "@/components/themed-scroll-container";
 import { InputText } from "@/components/ui";
 import { ColorOpacity, Colors } from "@/constants";
+import { useThemeColor } from "@/hooks/use-theme-color";
+import { useAppDB } from "@/hooks/useAppDB";
+import { UserInput } from "@/services";
 import { notesListAtom } from "@/state";
-
 import { isDbLoadedAtom } from "@/state/ui/uiAtoms";
 import { userAtom } from "@/state/user/userAtoms";
+import { Ionicons } from "@expo/vector-icons";
 import { useAtomValue } from "jotai";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const [searchText, setSearchText] = useState("");
-
   const user = useAtomValue(userAtom);
   const notes = useAtomValue(notesListAtom);
   const isLoaded = useAtomValue(isDbLoadedAtom);
+  const insets = useSafeAreaInsets();
+  const backgroundColor = useThemeColor({}, "background");
+  const { saveUserToDb } = useAppDB();
 
-  const quantityNotes = useMemo(() => {
-    return notes.length ?? 0;
-  }, [notes]);
+  const [userInfo, setUser] = useState<UserInput>({
+    name: "",
+    lastname: "",
+  });
+
+  const quantityNotes = useMemo(() => notes.length, [notes.length]);
 
   const userResolved = useMemo(() => {
     return user ?? { id: 0, name: "Usuario", lastname: "no registrado" };
   }, [user]);
+
+  const handleUserChange = useCallback((newInfo: UserInput) => {
+    setUser(newInfo);
+  }, []);
+
+  const handleSaveData = useCallback(async () => {
+    try {
+      await saveUserToDb(userInfo);
+    } catch (error) {
+      console.error("Error al guardar:", error);
+    }
+  }, [userInfo, saveUserToDb]);
 
   if (!isLoaded) {
     return (
@@ -37,17 +60,26 @@ export default function HomeScreen() {
 
   if (!user) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.errorText}>
-          ⚠️ Error: No se pudo encontrar el usuario. Verifica la DB o la función
-          getUser.
-        </Text>
-      </View>
+      <UserModal
+        userInformation={userInfo}
+        onchangeUser={handleUserChange}
+        onSave={handleSaveData}
+      />
     );
   }
 
   return (
-    <ThemedScrollContainer style={styles.scrollContainer}>
+    <View
+      style={[
+        {
+          flex: 1,
+          backgroundColor,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+        },
+        styles.container,
+      ]}
+    >
       <View style={styles.containerHome}>
         <CardUserInformation user={userResolved} qtyNotes={quantityNotes} />
 
@@ -55,21 +87,37 @@ export default function HomeScreen() {
           placeholder="Buscar por nombre o descripción"
           containerStyle={styles.textInputStyle}
           onChangeText={setSearchText}
+          rightIcon={
+            <Ionicons
+              name="search"
+              size={19}
+              color={ColorOpacity(Colors.icon, 70)}
+            />
+          }
         />
       </View>
-    </ThemedScrollContainer>
+
+      <ThemedScrollContainer style={styles.scrollContainer}>
+        <View style={styles.containerNotes}>
+          {notes.map((_, index) => (
+            <DescriptionNote key={index} />
+          ))}
+        </View>
+      </ThemedScrollContainer>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: { flex: 1 },
   containerHome: {
+    flex: 0.4,
     flexDirection: "column",
     rowGap: 20,
+    paddingHorizontal: 30,
   },
-  errorText: {
-    color: "red",
-    textAlign: "center",
-    padding: 20,
+  containerNotes: {
+    flexDirection: "column",
   },
   loadingContainer: {
     flex: 1,
@@ -83,7 +131,7 @@ const styles = StyleSheet.create({
     color: Colors.grayColor,
   },
   scrollContainer: {
-    paddingHorizontal: 10,
+    paddingTop: 15,
   },
   textInputStyle: {
     borderRadius: 50,

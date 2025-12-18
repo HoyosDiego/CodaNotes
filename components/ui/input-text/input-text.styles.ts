@@ -1,5 +1,5 @@
 import { ColorOpacity, Colors } from "@/constants";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -9,23 +9,23 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     flexDirection: "row",
-    height: 30,
+    // 30 en iOS, 36 en Android para evitar que se corte la letra
+    height: Platform.OS === 'ios' ? 30 : 36, 
+    overflow: 'hidden', 
   },
   input: {
     backgroundColor: "transparent",
-    borderColor: "transparent",
-    borderRadius: 8,
-    borderWidth: 0,
     color: ColorOpacity(Colors.blackColor, 80),
-    fontSize: 11,
-    paddingHorizontal: 16,
-  },
-  inputWithIconPadding: {
     flex: 1,
+    fontSize: 11,
+    height: '100%',
+    paddingHorizontal: 10, // Padding balanceado
+    paddingVertical: 0,
+    textAlignVertical: "center", // Centrado vertical en Android
   },
   iconContainer: {
     height: "100%",
-    width: 50,
+    aspectRatio: 1, // Hace que el contenedor del icono sea cuadrado perfecto
     justifyContent: "center",
     alignItems: "center",
   },

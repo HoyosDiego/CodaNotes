@@ -46,6 +46,7 @@ export const saveNote = async (note: NoteInput): Promise<number> => {
     idToUse,
     note.title,
     note.content,
+    note.bgcolor,
     Date.now(),
   );
 
@@ -84,8 +85,8 @@ export const getNotes = async (): Promise<INote | null> => {
   const notesObject: INote = {
     id: row.id,
     title: row.title,
+    bgcolor: row.bgcolor,
     content: row.content,
-    timestamp: row.timestamp,
   };
 
   return notesObject;

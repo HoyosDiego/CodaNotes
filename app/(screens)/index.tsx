@@ -1,3 +1,4 @@
+import AddNewNote from "@/components/add-new-note/add-new-note";
 import { CardUserInformation } from "@/components/card-user-information";
 import DescriptionNote from "@/components/desciption-note/description-note";
 import { UserModal } from "@/components/modal-register-user";
@@ -11,6 +12,7 @@ import { notesListAtom } from "@/state";
 import { isDbLoadedAtom } from "@/state/ui/uiAtoms";
 import { userAtom } from "@/state/user/userAtoms";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useAtomValue } from "jotai";
 
 import { useCallback, useMemo, useState } from "react";
@@ -18,6 +20,8 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   const [searchText, setSearchText] = useState("");
   const user = useAtomValue(userAtom);
   const notes = useAtomValue(notesListAtom);
@@ -48,6 +52,10 @@ export default function HomeScreen() {
       console.error("Error al guardar:", error);
     }
   }, [userInfo, saveUserToDb]);
+
+  const handleGoToAddNotes = useCallback(() => {
+    router.push("/add-notes-screen");
+  }, [router]);
 
   if (!isLoaded) {
     return (
@@ -99,11 +107,12 @@ export default function HomeScreen() {
 
       <ThemedScrollContainer style={styles.scrollContainer}>
         <View style={styles.containerNotes}>
-          {notes.map((_, index) => (
-            <DescriptionNote key={index} />
+          {notes.map((note, index) => (
+            <DescriptionNote key={index} items={note} />
           ))}
         </View>
       </ThemedScrollContainer>
+      <AddNewNote onPress={handleGoToAddNotes} />
     </View>
   );
 }

@@ -1,16 +1,31 @@
 import { ColorOpacity, Colors } from "@/constants";
+import { INote } from "@/services";
 import React from "react";
 import { StyleSheet, Text } from "react-native";
 import { Card } from "../ui";
 
-export default function DescriptionNote() {
+export default function DescriptionNote({ items }: { items?: INote }) {
   return (
     <>
-      <Card className={styles.containerTitle}>
-        <Text style={styles.titleText}>Nota #</Text>
+      <Card
+        className={[styles.containerTitle, { backgroundColor: items?.bgcolor }]}
+      >
+        <Text style={styles.titleText} numberOfLines={1}>
+          {items?.title}
+        </Text>
       </Card>
-      <Card className={styles.containerDescription}>
-        <Text>DescriptionNote</Text>
+      <Card
+        className={[
+          styles.containerDescription,
+          {
+            backgroundColor: ColorOpacity(
+              items?.bgcolor || Colors.mainColor,
+              20,
+            ),
+          },
+        ]}
+      >
+        <Text>{items?.content}</Text>
       </Card>
     </>
   );

@@ -19,13 +19,13 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 11,
     height: '100%',
-    paddingHorizontal: 10, // Padding balanceado
+    paddingHorizontal: 10, 
     paddingVertical: 0,
-    textAlignVertical: "center", // Centrado vertical en Android
+    textAlignVertical: "center", 
   },
   iconContainer: {
     height: "100%",
-    aspectRatio: 1, // Hace que el contenedor del icono sea cuadrado perfecto
+    aspectRatio: 1, 
     justifyContent: "center",
     alignItems: "center",
   },

@@ -14,11 +14,14 @@ export interface INote {
   id: number; 
   title: string;
   content: string;
-  timestamp: number; 
+  bgcolor: string;
+  timestamp?: Date | number; 
 }
 
 export interface NoteInput {
   id?: number | null; 
   title: string;
+  bgcolor: string;
   content: string;
+  timestamp?: Date | number; 
 }

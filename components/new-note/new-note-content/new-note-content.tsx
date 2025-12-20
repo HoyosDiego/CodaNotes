@@ -15,7 +15,7 @@ export function NewNoteContent({
   return (
     <View style={styles.headerContainer}>
       <HeaderNewNote />
-      
+
       <ScrollView contentContainerStyle={styles.formContainer}>
         <Text style={[styles.label, { backgroundColor: note.bgcolor }]}>
           Título
@@ -51,7 +51,7 @@ export function NewNoteContent({
         <Button
           style={{ ...styles.saveButton, backgroundColor: note.bgcolor }}
           onPress={onPress}
-          disabled={!note.title.trim() && !note.content.trim()}
+          disabled={!note.title.trim() || !note.content.trim()}
         >
           <Text style={styles.saveButtonText}>GUARDAR NOTA</Text>
         </Button>

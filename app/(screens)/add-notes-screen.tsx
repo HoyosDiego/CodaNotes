@@ -1,20 +1,14 @@
-import { useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 import { NewNote, NewNoteContent } from "@/components/new-note";
 import { ColorsContent } from "@/components/new-note/colors-content";
 import { Button } from "@/components/ui/button/button";
 import { ColorOpacity, Colors } from "@/constants";
-import { useThemeColor } from "@/hooks/use-theme-color";
 import { useAppDB } from "@/hooks/useAppDB";
 import { NoteInput } from "@/services";
+import { useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
 
 export default function AddNotesScreen() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
-  const backgroundColor = useThemeColor({}, "background");
-  const textColor = useThemeColor({}, "text");
   const { saveNoteToDb } = useAppDB();
 
   const [note, setNote] = useState<NoteInput>({

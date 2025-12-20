@@ -7,6 +7,19 @@ import { NoteInput } from "@/services";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 
+const DATA_COLORS = [
+  Colors.greenColor,
+  Colors.blueColor,
+  Colors.lightRedColor,
+  Colors.lightBlueColor,
+  Colors.lightGreenColor,
+  Colors.pinkColor,
+  Colors.secondaryGreenColor,
+  Colors.purpleColor,
+  Colors.redColor,
+  Colors.secondaryLightGreenColor,
+];
+
 export default function AddNotesScreen() {
   const router = useRouter();
   const { saveNoteToDb } = useAppDB();
@@ -16,19 +29,6 @@ export default function AddNotesScreen() {
     content: "",
     bgcolor: Colors.mainColor,
   });
-
-  const DATA_COLORS = [
-    Colors.greenColor,
-    Colors.blueColor,
-    Colors.lightRedColor,
-    Colors.lightBlueColor,
-    Colors.lightGreenColor,
-    Colors.pinkColor,
-    Colors.secondaryGreenColor,
-    Colors.purpleColor,
-    Colors.redColor,
-    Colors.secondaryLightGreenColor,
-  ];
 
   const handleSave = useCallback(() => {
     if (!note.title.trim()) return;

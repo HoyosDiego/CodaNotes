@@ -57,6 +57,12 @@ export const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "700",
   },
+  photoStyle:{ 
+    height: 55,
+    width: "100%",
+    borderRadius: 50,
+    resizeMode: "cover"
+  },
   qtyNotes: {
     color: Colors.whiteColor,
     fontSize: 16,

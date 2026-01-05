@@ -12,15 +12,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.codanotes",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      },
-      "customBuildFlags": [
-        "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
-      ]
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Permítenos acceder a la cámara para que puedas tomar tu foto de perfil."
+      }
     },
     "android": {
-      "enableFTS": false,
-      "useSQLCipher": false,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -49,7 +45,12 @@
           }
         }
       ],
-      "expo-sqlite"
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permítenos acceder a la cámara para que puedas tomar tu foto de perfil."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

@@ -1,5 +1,6 @@
 import React from "react";
-import { Pressable, Text } from "react-native";
+import { Text } from "react-native";
+import { Button } from "../ui/button/button";
 import { styles } from "./add-new-note.styles";
 
 interface AddNewNoteProps {
@@ -8,8 +9,8 @@ interface AddNewNoteProps {
 
 export default function AddNewNote({ onPress }: AddNewNoteProps) {
   return (
-    <Pressable style={styles.container} onPress={onPress}>
+    <Button style={styles.container} onPress={onPress}>
       <Text style={styles.text}>+</Text>
-    </Pressable>
+    </Button>
   );
 }

@@ -29,24 +29,25 @@ export function CardUserInformation({
         </Modal>
       )}
       <Card className={styles.containerCard}>
-        <View style={styles.contentCard}>
-          <View style={styles.firstContainer}>
-            <Text style={styles.nameStyle} numberOfLines={1}>
-              {user?.name} {user?.lastname}
-            </Text>
-            <View style={styles.notesContainer}>
-              <View style={styles.qtyNotesContainer}>
-                <Text style={styles.qtyNotes}>{qtyNotes}</Text>
-                <Ionicons
-                  name="checkmark-circle"
-                  color={Colors.greenColor}
-                  size={18}
-                />
-              </View>
-              <Text style={styles.notesText}>Notas agregadas</Text>
+        <View style={styles.firstContainer}>
+          <Text style={styles.nameStyle} numberOfLines={1}>
+            {user?.name} {user?.lastname}
+          </Text>
+          <View style={styles.notesContainer}>
+            <View style={styles.qtyNotesContainer}>
+              <Text style={styles.qtyNotes}>{qtyNotes}</Text>
+              <Ionicons
+                style={styles.checkmark}
+                name="checkmark-circle"
+                color={Colors.greenColor}
+                size={15}
+              />
             </View>
+            <Text style={styles.notesText}>Notas agregadas</Text>
           </View>
-          <View style={styles.secondContainer}>
+        </View>
+        <View style={styles.settingsContainer}>
+          <View style={styles.separatorSettings} >
             <Button
               style={styles.imageContainer}
               onPress={() => setShowCamera(true)}
@@ -55,12 +56,23 @@ export function CardUserInformation({
                 <Image source={{ uri: userPhoto }} style={styles.photoStyle} />
               ) : (
                 <Ionicons
-                  name="camera-outline"
+                  name="camera-sharp"
                   color={Colors.grayColor}
                   size={25}
                 />
               )}
             </Button>
+
+            <View
+              style={styles.settingsIcon}
+            >
+              <Ionicons
+                name="settings-sharp"
+                color={Colors.whiteColor}
+                size={25}
+
+              />
+            </View>
           </View>
         </View>
       </Card>

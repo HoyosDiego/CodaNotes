@@ -9,19 +9,25 @@ export const useAppDB = () => {
     const setUser = useSetAtom(userAtom);
     const setIsDbLoaded = useSetAtom(isDbLoadedAtom);
 
+    const actionAllNotes = useCallback(async () => {
+        const [allNotes, notes] = await Promise.all([
+            countAllNotes(),
+            fetchNotes(),
+        ]);
+        setCountNotes(allNotes);
+        setNotesList(notes);
+    }, [setNotesList, setCountNotes]);
+
     useEffect(() => {
         const loadInitialData = async () => {
             try {
                 await initDB();
 
-                const [allNotes, notes, user] = await Promise.all([
-                    countAllNotes(),
-                    fetchNotes(),
+                const [user] = await Promise.all([
                     getUser(),
                 ]);
 
-                setNotesList(notes);
-                setCountNotes(allNotes);
+                actionAllNotes();
                 setUser(user);
 
             } catch (error) {
@@ -70,6 +76,8 @@ export const useAppDB = () => {
                 return [updatedNote, ...prevNotes];
             }
         });
+
+        actionAllNotes();
 
         return updatedNote;
     }, [setNotesList]);

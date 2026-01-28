@@ -8,9 +8,10 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 8,
     flex: 1,
+    flexDirection: "row",
     height: 180,
     opacity: 0.8,
-    paddingHorizontal: 20,
+    paddingHorizontal: 14,
     shadowColor: Colors.grayColor,
     shadowOffset: {
       width: 0,
@@ -18,46 +19,45 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.7,
     shadowRadius: 6,
-
     width: "100%",
+  },
+  checkmark: {
+    marginBottom: 2,
   },
   containerCards: {
     flex: 1,
-    flexDirection: "column",
     rowGap: 20,
-  },
-  contentCard: {
-    flexDirection: "row",
   },
   firstContainer: {
     flex: 0.8,
-    marginVertical: 20,
   },
   imageContainer: {
-    alignItems: "center",
     backgroundColor: Colors.whiteColor,
     borderColor: Colors.greenColor,
     borderRadius: 50,
     borderWidth: 2,
     height: 60,
-    justifyContent: "center", 
+    marginTop: 10,
     width: 60,
   },
   nameStyle: {
+    flex: 0.2,
     fontSize: 24,
     color: Colors.whiteColor,
     fontWeight: "800",
-    width: "80%",
+    marginTop: 10,
   },
   notesContainer: {
-    marginTop: 40,
+    flex: 0.8,
+    justifyContent: "flex-end",
+    marginBottom: 14,
   },
   notesText: {
     color: Colors.whiteColor,
     fontSize: 11,
     fontWeight: "700",
   },
-  photoStyle:{ 
+  photoStyle: {
     height: 55,
     width: "100%",
     borderRadius: 50,
@@ -69,11 +69,22 @@ export const styles = StyleSheet.create({
     fontWeight: "700",
   },
   qtyNotesContainer: {
+    alignItems: "flex-end",
     flexDirection: "row",
     columnGap: 4,
   },
-  secondContainer: {
+  separatorSettings: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  settingsContainer: {
     flex: 0.2,
     alignItems: "flex-end",
+    flexDirection: "column",
   },
+  settingsIcon: {
+    alignItems: "flex-end",
+    marginBottom: 10,
+  }
 });

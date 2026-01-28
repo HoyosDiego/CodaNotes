@@ -7,7 +7,8 @@ import { HeaderNewNote } from "../header-new-note";
 import { styles } from "./new-note-content.style";
 import { INewNoteContentProps } from "./new-note-content.types";
 
-export function NewNoteContent({ setNote, note, onPress }: INewNoteContentProps) {
+export function NewNoteContent({ setNote, note, opacityButtonColor, onPress }: INewNoteContentProps) {
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -16,7 +17,6 @@ export function NewNoteContent({ setNote, note, onPress }: INewNoteContentProps)
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.headerContainer}>
           <HeaderNewNote />
-
           <ScrollView
             contentContainerStyle={styles.formContainer}
             keyboardShouldPersistTaps="handled" >
@@ -29,6 +29,7 @@ export function NewNoteContent({ setNote, note, onPress }: INewNoteContentProps)
                 ...styles.inputTitle,
                 borderColor: ColorOpacity(note.bgcolor, 80),
               }}
+              style={styles.styleInputText}
               maxLength={20}
             />
 
@@ -42,13 +43,13 @@ export function NewNoteContent({ setNote, note, onPress }: INewNoteContentProps)
                 ...styles.textArea,
                 borderColor: ColorOpacity(note.bgcolor, 80),
               }}
+              style={styles.styleInputText}
               textAlignVertical="top"
             />
 
             <Button
-              style={{ ...styles.saveButton, backgroundColor: note.bgcolor }}
+              style={{ ...styles.saveButton, backgroundColor: opacityButtonColor }}
               onPress={onPress}
-              disabled={!note.title.trim() || !note.content.trim()}
             >
               <Text style={styles.saveButtonText}>GUARDAR NOTA</Text>
             </Button>

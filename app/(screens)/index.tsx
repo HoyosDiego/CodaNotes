@@ -7,17 +7,21 @@ import { InputText } from "@/components/ui";
 import { ColorOpacity, Colors } from "@/constants";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useAppDB } from "@/hooks/useAppDB";
-import { UserInput } from "@/services";
+import { INote, UserInput } from "@/services";
 import { notesListAtom, totalNotesCountAtom } from "@/state";
 import { isDbLoadedAtom } from "@/state/ui/uiAtoms";
 import { userAtom } from "@/state/user/userAtoms";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 
 import { useCallback, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+// Atoms and modals components
+import { ModalUI } from '@/components/ui/modal/modal';
+import { selectedNoteAtom } from '@/state/ui/uiAtoms';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -30,6 +34,9 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const backgroundColor = useThemeColor({}, "background");
   const { saveUserToDb } = useAppDB();
+
+  const setSelectedNote = useSetAtom(selectedNoteAtom);
+  const selectedNote = useAtomValue(selectedNoteAtom);
 
   const [userInfo, setUser] = useState<UserInput>({
     name: "",
@@ -57,6 +64,11 @@ export default function HomeScreen() {
   const handleGoToAddNotes = useCallback(() => {
     router.push("/add-notes-screen");
   }, [router]);
+
+  const handleLongPressNote = useCallback((note: INote) => {
+    setSelectedNote(note);
+  }, [setSelectedNote]);
+
 
   if (!isLoaded) {
     return (
@@ -109,11 +121,24 @@ export default function HomeScreen() {
       <ThemedScrollContainer style={styles.scrollContainer}>
         <View style={styles.containerNotes}>
           {notes.map((note, index) => (
-            <DescriptionNote key={index} items={note} />
+            <DescriptionNote
+              key={note.id}
+              items={note}
+              onLongPress={() => handleLongPressNote(note)}
+            />
           ))}
         </View>
       </ThemedScrollContainer>
       <AddNewNote onPress={handleGoToAddNotes} />
+
+      <ModalUI
+        // The !!selectedNote is to convert the selectedNote to a boolean
+        isOpen={!!selectedNote}
+        onClose={() => setSelectedNote(null)}
+      >
+        <Text style={styles.modalTitle}>Configuración de Nota</Text>
+        <Text style={styles.modalText}>{selectedNote?.title}</Text>
+      </ModalUI>
     </View>
   );
 }
@@ -146,5 +171,17 @@ const styles = StyleSheet.create({
   textInputStyle: {
     borderRadius: 50,
     borderColor: ColorOpacity(Colors.mainColor, 50),
+  },
+
+  // Modal styles
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    fontFamily: "Poppins_700Bold",
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
   },
 });

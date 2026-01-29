@@ -14,7 +14,7 @@ export function ColorsContent({
       <Card
         className={[
           styles.cardColor,
-          { backgroundColor: ColorOpacity(note.bgcolor, 40) },
+          { backgroundColor: ColorOpacity(note.bgcolor, 80) },
         ]}
       >
         {children}

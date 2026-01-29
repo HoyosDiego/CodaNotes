@@ -26,15 +26,29 @@ export const initDB = async (): Promise<void> => {
   }
 };
 
-export const fetchNotes = async (): Promise<INote[]> => {
+export const fetchNotes = async (limit: number = 1000, offset: number = 0): Promise<INote[]> => {
   if (!db) throw new Error("Database not initialized. Call initDB first.");
 
   const notes = await db.getAllAsync<INote>(
-    "SELECT * FROM notes ORDER BY timestamp DESC;",
+    "SELECT * FROM notes ORDER BY timestamp DESC LIMIT ? OFFSET ?;",
+    [limit, offset]
   );
 
   return notes;
 };
+
+export const countAllNotes = async (): Promise<number> => {
+  if (!db) throw new Error("Database not initialized. Call initDB first.");
+
+  const result = await db.getAllAsync<{ "COUNT(*)": number }>(
+    "SELECT COUNT(*) FROM notes;"
+  );
+
+  const allNotes=result[0]["COUNT(*)"] || 0
+
+  return allNotes;
+};
+
 
 export const saveNote = async (note: NoteInput): Promise<number> => {
   if (!db) throw new Error("Database not initialized. Call initDB first.");

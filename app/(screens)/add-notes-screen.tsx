@@ -5,7 +5,7 @@ import { ColorOpacity, Colors } from "@/constants";
 import { useAppDB } from "@/hooks/useAppDB";
 import { NoteInput } from "@/services";
 import { useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 const DATA_COLORS = [
   Colors.greenColor,
@@ -31,7 +31,7 @@ export default function AddNotesScreen() {
   });
 
   const handleSave = useCallback(() => {
-    if (!note.title.trim()) return;
+    if (!note.title.trim() || !note.content.trim()) return;
 
     saveNoteToDb({
       title: note.title,
@@ -52,9 +52,17 @@ export default function AddNotesScreen() {
     [setNote],
   );
 
+  const opacityButtonColor = useMemo(() => {
+    if (!note.title.trim() || !note.content.trim()) {
+
+      return ColorOpacity(note.bgcolor, 80);
+    }
+    return note.bgcolor
+  }, [note.bgcolor]);
+
   return (
     <NewNote>
-      <NewNoteContent setNote={setNote} note={note} onPress={handleSave} />
+      <NewNoteContent setNote={setNote} note={note} opacityButtonColor={opacityButtonColor} onPress={handleSave} />
 
       <ColorsContent note={note}>
         {DATA_COLORS.map((color, index) => (
@@ -65,7 +73,7 @@ export default function AddNotesScreen() {
               width: 35,
               height: 35,
               borderRadius: 25,
-              backgroundColor: ColorOpacity(color, 80),
+              backgroundColor: color
             }}
           />
         ))}

@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     backgroundColor: Colors.mainColor,
+    borderRadius: 8,
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 25,
@@ -18,7 +19,8 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
- footerContainer: {
-    flex: 0.2,
+  footerContainer: {
+    height: 128,
+    marginBottom: 22
   },
 });

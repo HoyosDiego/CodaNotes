@@ -8,7 +8,7 @@ import { ColorOpacity, Colors } from "@/constants";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useAppDB } from "@/hooks/useAppDB";
 import { UserInput } from "@/services";
-import { notesListAtom } from "@/state";
+import { notesListAtom, totalNotesCountAtom } from "@/state";
 import { isDbLoadedAtom } from "@/state/ui/uiAtoms";
 import { userAtom } from "@/state/user/userAtoms";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,6 +24,7 @@ export default function HomeScreen() {
 
   const [searchText, setSearchText] = useState("");
   const user = useAtomValue(userAtom);
+  const allNotes = useAtomValue(totalNotesCountAtom);
   const notes = useAtomValue(notesListAtom);
   const isLoaded = useAtomValue(isDbLoadedAtom);
   const insets = useSafeAreaInsets();
@@ -35,7 +36,7 @@ export default function HomeScreen() {
     lastname: "",
   });
 
-  const quantityNotes = useMemo(() => notes.length, [notes.length]);
+  const quantityNotes = useMemo(() => allNotes, [allNotes]);
 
   const userResolved = useMemo(() => {
     return user ?? { id: 0, name: "Usuario", lastname: "no registrado" };

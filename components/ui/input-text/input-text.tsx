@@ -1,77 +1,69 @@
-import { Colors } from "@/constants";
-import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import { ColorOpacity, Colors } from "@/constants";
+import React, { forwardRef, memo, ReactNode } from "react";
 import {
-    StyleProp,
-    StyleSheet,
-    TextInput,
-    TextInputProps,
-    TouchableOpacity,
-    View,
-    ViewStyle,
+  StyleProp,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from "react-native";
+import styles from "./input-text.styles";
 
 interface ITextInputProps extends TextInputProps {
-  showIconSearch?: boolean;
-  onSearchPress?: () => void;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
+  onRightIconPress?: () => void;
+  onLeftIconPress?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
 }
 
-export function InputText({
-  containerStyle,
-  onSearchPress,
-  showIconSearch = true,
-  style,
-  ...rest
-}: ITextInputProps) {
-  return ( 
-    <View style={[styles.container, containerStyle]}> 
-      <TextInput
-        style={[
-          styles.input,
-          style,
-          showIconSearch && styles.inputWithIconPadding,
-        ]}
-        placeholderTextColor={Colors.icon}
-        autoCapitalize="none"
-        placeholder="Buscar"
-        {...rest}
-      />
-      {showIconSearch && (
-        <TouchableOpacity style={styles.iconContainer} onPress={onSearchPress}>
-          <Ionicons name="search" size={24} color={Colors.icon} />
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-}
+export const InputText = forwardRef<TextInput, ITextInputProps>(
+  (
+    {
+      containerStyle,
+      leftIcon,
+      rightIcon,
+      onRightIconPress,
+      onLeftIconPress,
+      style,
+      ...rest
+    },
+    ref,
+  ) => {
+    const renderIcon = (icon: ReactNode, onPress?: () => void) => {
+      if (!icon) return null;
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    backgroundColor: Colors.background,
-    borderColor: Colors.tabIconDefault,
-    borderRadius: 8,
-    borderWidth: 1,
-    flexDirection: "row",
-    height: 50,
+      return (
+        <TouchableOpacity
+          disabled={!onPress}
+          style={styles.iconContainer}
+          onPress={onPress}
+        >
+          {icon}
+        </TouchableOpacity>
+      );
+    };
+
+    return (
+      <View style={[styles.container, containerStyle]}>
+        {renderIcon(leftIcon, onLeftIconPress)}
+
+        <TextInput
+          ref={ref}
+          style={[styles.input, style]}
+          placeholderTextColor={ColorOpacity(Colors.blackColor, 50)}
+          autoCapitalize="none"
+          {...rest}
+        />
+
+        {renderIcon(rightIcon, onRightIconPress)}
+      </View>
+    );
   },
-  input: {
-    backgroundColor: "transparent",
-    borderColor: "transparent",
-    borderRadius: 8,
-    borderWidth: 0,
-    color: Colors.text,
-    fontSize: 16,
-    paddingHorizontal: 16,
-  },
-  inputWithIconPadding: {
-    flex: 1,
-  },
-  iconContainer: {
-    height: "100%",
-    width: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
+);
+
+// --- SOLUCIÓN AL ERROR DE ESLINT ---
+InputText.displayName = "InputText";
+
+export default memo(InputText);

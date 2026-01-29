@@ -1,9 +1,5 @@
-interface IUserInformation {
-  name: string;
-  lastName: string;
-  points?: number;
-}
-
+import { User } from "@/services";
 export interface ICardUserInformationProps {
-  user: IUserInformation;
+  user: User | null;
+  qtyNotes:number;
 }

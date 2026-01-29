@@ -16,6 +16,19 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npx expo start
    ```
 
+3. Start with android
+
+   ```bash
+   yarn android
+   ````
+4. Start with iOS
+
+   ```bash
+   yarn ios
+   ````
+
+5. For using yarn without errors try to download > v22
+
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)

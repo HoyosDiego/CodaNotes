@@ -19,8 +19,12 @@ export const ModalUI = ({ isOpen, onClose, children }: PropsWithChildren<IModalU
                     name="close-circle-sharp"
                     color={Colors.redColor} size={30}
                     onPress={onClose} />
-                <ScrollView style={styles.modalView}>
-                    <View style={styles.containerContent}>
+                <ScrollView
+                    style={styles.modalView}
+                    contentContainerStyle={{ flexGrow: 1 }}>
+                    <View
+                        style={[styles.containerContent, { flexGrow: 1 }]}
+                    >
                         {children}
                     </View>
                 </ScrollView>

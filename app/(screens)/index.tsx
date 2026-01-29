@@ -136,8 +136,25 @@ export default function HomeScreen() {
         isOpen={!!selectedNote}
         onClose={() => setSelectedNote(null)}
       >
-        <Text style={styles.modalTitle}>Configuración de Nota</Text>
-        <Text style={styles.modalText}>{selectedNote?.title}</Text>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Configuración de nota</Text>
+            <Text style={styles.modalSubTitle}>Estas configurando la nota: {selectedNote?.title}</Text>
+          </View>
+          <View style={styles.emptyStateContainer}>
+            <Ionicons
+              name="camera"
+              size={120}
+              color="#E5E5E5"
+            />
+            <Text style={styles.emptyStateText}>
+              Una vez seleccionada o tomada la foto tendrá una vista preliminar antes de guardar
+            </Text>
+          </View>
+          <View style={styles.saveButton}>
+            <Text style={styles.saveButtonText}>GUARDAR</Text>
+          </View>
+        </View>
       </ModalUI>
     </View>
   );
@@ -174,14 +191,64 @@ const styles = StyleSheet.create({
   },
 
   // Modal styles
+  modalContent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    minHeight: 300,
+  },
+  modalHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
   modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    fontFamily: "Poppins_700Bold",
-    marginBottom: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+    textAlign: 'center',
+  },
+  modalSubTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#000',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   modalText: {
     fontSize: 16,
-    marginBottom: 10,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  emptyStateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 30,
+  },
+  emptyStateText: {
+    textAlign: 'center',
+    color: '#808080',
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 20,
+    paddingHorizontal: 30,
+    lineHeight: 22,
+  },
+  saveButton: {
+    backgroundColor: '#FFAD42',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 30,
+    width: '100%',
+    marginTop: 30,
+  },
+  saveButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

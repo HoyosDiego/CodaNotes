@@ -1,0 +1,1 @@
+export interface ISettingsLongPressProps { title: string }

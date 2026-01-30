@@ -1,19 +1,18 @@
 import { ColorOpacity, Colors } from "@/constants";
-import { INote } from "@/services";
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { Card } from "../ui";
+import { DescriptionNoteProps } from "./description-note.type";
 
 export default function DescriptionNote({
   items,
-  onLongPress,
-}: {
-  items?: INote,
-  onLongPress?: () => void
-}) {
+  onLongPress
+}:
+  DescriptionNoteProps
+) {
   return (
     <>
-      <Pressable onLongPress={onLongPress}>
+      <Pressable onLongPress={onLongPress} >
         <Card
           className={[styles.containerTitle, { backgroundColor: items?.bgcolor }]}
         >

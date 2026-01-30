@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
     containerContent: {
         padding: 16,
         alignItems: 'center',
+        height: '100%',
     },
     closeIcon: {
         position: 'relative',

@@ -23,7 +23,7 @@ export const ModalUI = ({ isOpen, onClose, children }: PropsWithChildren<IModalU
                     style={styles.modalView}
                     contentContainerStyle={{ flexGrow: 1 }}>
                     <View
-                        style={[styles.containerContent, { flexGrow: 1 }]}
+                        style={styles.containerContent}
                     >
                         {children}
                     </View>

@@ -12,7 +12,7 @@ export default function DescriptionNote({
 ) {
   return (
     <>
-      <Pressable onLongPress={onLongPress} >
+      <Pressable onLongPress={onLongPress}>
         <Card
           className={[styles.containerTitle, { backgroundColor: items?.bgcolor }]}
         >
@@ -31,7 +31,7 @@ export default function DescriptionNote({
             },
           ]}
         >
-          <Text>{items?.content}</Text>
+          <Text numberOfLines={1}>{items?.content}</Text>
         </Card>
       </Pressable>
     </>

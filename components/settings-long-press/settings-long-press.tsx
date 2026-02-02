@@ -1,10 +1,11 @@
+import { ColorOpacity, Colors } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 import { Button } from '../ui/button';
 import { styles } from './settings-long-press.style';
 import { ISettingsLongPressProps } from './settings-long-press.type';
 
-export const SettingsLongPressComponent = ({ title }: ISettingsLongPressProps) => {
+export const SettingsLongPressComponent = ({ title, content }: ISettingsLongPressProps) => {
     return (
         <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
@@ -13,16 +14,15 @@ export const SettingsLongPressComponent = ({ title }: ISettingsLongPressProps) =
                 <Ionicons
                     name="camera"
                     size={65}
-                    color="#E5E5E5"
+                    color="#D9D9D9"
                 />
             </View>
-            <View style={styles.emptyStateContainer}>
-
+            {!content && <View style={styles.emptyStateContainer}>
                 <Text style={styles.emptyStateText}>
                     Una vez seleccionada o tomada la foto tendrá una vista preliminar antes de guardar
                 </Text>
-            </View>
-            <Button style={styles.saveButton}>
+            </View>}
+            <Button style={{ ...styles.saveButton, backgroundColor: !content ? ColorOpacity(Colors.mainColor, 80) : Colors.mainColor }} >
                 <Text style={styles.saveButtonText}>GUARDAR</Text>
             </Button>
         </View>

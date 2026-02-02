@@ -1,1 +1,4 @@
-export interface ISettingsLongPressProps { title: string }
+export interface ISettingsLongPressProps {
+    title: string,
+    content?: string,
+}

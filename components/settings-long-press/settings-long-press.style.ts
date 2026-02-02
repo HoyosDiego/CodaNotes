@@ -1,4 +1,3 @@
-import { Colors } from "@/constants";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -16,9 +15,8 @@ export const styles = StyleSheet.create({
         marginBottom: 20,
     },
     modalTitle: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
-        color: '#000',
         textAlign: 'center',
     },
     modalSubTitle: {
@@ -30,7 +28,7 @@ export const styles = StyleSheet.create({
     },
     modalText: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '900',
         color: '#000',
         marginBottom: 20,
         textAlign: 'center',
@@ -42,15 +40,14 @@ export const styles = StyleSheet.create({
     },
     emptyStateText: {
         textAlign: 'center',
-        color: '#808080',
-        fontSize: 16,
-        fontWeight: '600',
+        color: '#797979',
+        fontSize: 20,
+        fontWeight: '900',
         marginTop: 20,
         paddingHorizontal: 30,
-        lineHeight: 22,
+        lineHeight: 30,
     },
     saveButton: {
-        backgroundColor: Colors.mainColor,
         borderRadius: 30,
         width: 253,
         height: 51,

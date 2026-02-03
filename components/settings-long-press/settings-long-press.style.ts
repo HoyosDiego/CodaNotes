@@ -33,20 +33,7 @@ export const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
     },
-    emptyStateContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginVertical: 30,
-    },
-    emptyStateText: {
-        textAlign: 'center',
-        color: '#797979',
-        fontSize: 20,
-        fontWeight: '900',
-        marginTop: 20,
-        paddingHorizontal: 30,
-        lineHeight: 30,
-    },
+
     saveButton: {
         borderRadius: 30,
         width: 253,

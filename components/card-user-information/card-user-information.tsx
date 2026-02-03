@@ -11,12 +11,13 @@ import { ICardUserInformationProps } from "./card-user-information.types";
 export function CardUserInformation({
   user,
   qtyNotes,
+  hasOpacity
 }: ICardUserInformationProps) {
   const [showCamera, setShowCamera] = useState(false);
   const [userPhoto, setUserPhoto] = useState<string | null>(null); // Para guardar la foto tomada
 
   return (
-    <View style={styles.containerCards}>
+    <View style={{ ...styles.containerCards, opacity: !hasOpacity ? 1 : 0.5 }}>
       {showCamera && (
         <Modal visible={showCamera} animationType="slide" transparent={false}>
           <CameraComponent

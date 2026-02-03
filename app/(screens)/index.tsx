@@ -3,7 +3,6 @@ import { CardUserInformation } from "@/components/card-user-information";
 import DescriptionNote from "@/components/desciption-note/description-note";
 import { UserModal } from "@/components/modal-register-user";
 import ThemedScrollContainer from "@/components/themed-scroll-container";
-import { InputText } from "@/components/ui";
 import { ColorOpacity, Colors } from "@/constants";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useAppDB } from "@/hooks/useAppDB";
@@ -11,18 +10,20 @@ import { INote, UserInput } from "@/services";
 import { notesListAtom, totalNotesCountAtom } from "@/state";
 import { isDbLoadedAtom } from "@/state/ui/uiAtoms";
 import { userAtom } from "@/state/user/userAtoms";
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import { useCallback, useMemo, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, Modal, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Atoms and modals components
+import { CameraComponent } from "@/components/camera/camera";
 import { SettingsLongPressComponent } from "@/components/settings-long-press";
+import { Button } from "@/components/ui/button";
 import { ModalUI } from '@/components/ui/modal/modal';
 import { selectedNoteAtom } from '@/state/ui/uiAtoms';
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -35,6 +36,8 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const backgroundColor = useThemeColor({}, "background");
   const { saveUserToDb } = useAppDB();
+  const [showCamera, setShowCamera] = useState(false);
+  const [userPhoto, setUserPhoto] = useState<string | null>(null); // Para guardar la foto tomada
 
   const setSelectedNote = useSetAtom(selectedNoteAtom);
   const selectedNote = useAtomValue(selectedNoteAtom);
@@ -70,6 +73,8 @@ export default function HomeScreen() {
     setSelectedNote(note);
   }, [setSelectedNote]);
 
+  const isOpenModal = useMemo(() => !!selectedNote, [selectedNote]);
+  const handleCloseModal = useCallback(() => setSelectedNote(null), [setSelectedNote]);
 
   if (!isLoaded) {
     return (
@@ -90,6 +95,51 @@ export default function HomeScreen() {
     );
   }
 
+  const CameraAction = useMemo(() => (
+    <Button
+      style={{ backgroundColor: 'transparent' }}
+      onPress={() => setShowCamera(true)}
+    >
+      {userPhoto ? (
+        <Image source={{ uri: userPhoto }}
+          style={{ width: 65, height: 65, borderRadius: 50 }}
+        />
+      ) : (
+        <Ionicons
+          name="camera-sharp"
+          color={'#D9D9D9'}
+          size={55}
+        />
+      )}
+    </Button>
+  ), [userPhoto, setShowCamera]);
+
+  const ModalCamera = useMemo(() => (
+    showCamera && (
+      <Modal visible={showCamera} animationType="slide" transparent={false}>
+        <CameraComponent
+          onClose={() => setShowCamera(false)}
+          onPhotoTaken={(uri) => {
+            setUserPhoto(uri);
+            setShowCamera(false);
+          }}
+        />
+      </Modal>
+    )
+  ), [showCamera, setShowCamera, setUserPhoto]);
+
+  const ModalSettings = useMemo(() => (
+    showCamera ? ModalCamera : CameraAction
+  ), [showCamera]);
+
+  const ModalContent = useMemo(() => (
+    <View style={styles.emptyStateContainer}>
+      <Text style={styles.emptyStateText}>
+        Una vez seleccionada o tomada la foto tendrá una vista preliminar antes de guardar
+      </Text>
+    </View>
+  ), [userPhoto]);
+
   return (
     <View
       style={[
@@ -103,19 +153,8 @@ export default function HomeScreen() {
       ]}
     >
       <View style={styles.containerHome}>
-        <CardUserInformation user={userResolved} qtyNotes={quantityNotes} />
-
-        <InputText
-          placeholder="Buscar por nombre o descripción"
-          containerStyle={styles.textInputStyle}
-          onChangeText={setSearchText}
-          rightIcon={
-            <Ionicons
-              name="search"
-              size={19}
-              color={ColorOpacity(Colors.icon, 70)}
-            />
-          }
+        <CardUserInformation user={userResolved} qtyNotes={selectedNote ? 0 : quantityNotes}
+          hasOpacity={!!selectedNote}
         />
       </View>
 
@@ -130,14 +169,18 @@ export default function HomeScreen() {
           ))}
         </View>
       </ThemedScrollContainer>
-      <AddNewNote onPress={handleGoToAddNotes} />
+      <AddNewNote onPress={handleGoToAddNotes} isDisabled={!!selectedNote} />
 
       <ModalUI
         // The !!selectedNote is to convert the selectedNote to a boolean
-        isOpen={!!selectedNote}
-        onClose={() => setSelectedNote(null)}
+        isOpen={isOpenModal}
+        onClose={handleCloseModal}
       >
-        <SettingsLongPressComponent title={selectedNote?.title || ""} />
+        <SettingsLongPressComponent
+          title={selectedNote?.title || ""}
+          cameraAction={ModalSettings}
+          content={ModalContent}
+        />
       </ModalUI>
     </View>
   );
@@ -167,6 +210,20 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingTop: 15,
+  },
+  emptyStateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 30,
+  },
+  emptyStateText: {
+    textAlign: 'center',
+    color: '#797979',
+    fontSize: 20,
+    fontWeight: '900',
+    marginTop: 20,
+    paddingHorizontal: 30,
+    lineHeight: 30,
   },
   textInputStyle: {
     borderRadius: 50,

@@ -1,4 +1,7 @@
+import { ReactNode } from "react";
+
 export interface ISettingsLongPressProps {
     title: string,
-    content?: string,
+    content?: ReactNode,
+    cameraAction?: ReactNode,
 }

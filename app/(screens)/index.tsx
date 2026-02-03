@@ -19,6 +19,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Atoms and modals components
 import { CameraComponent } from "@/components/camera/camera";
+import { IconsPatron } from "@/components/icons-patron";
 import { SettingsLongPressComponent } from "@/components/settings-long-press";
 import { Button } from "@/components/ui/button";
 import { ModalUI } from '@/components/ui/modal/modal';
@@ -133,11 +134,17 @@ export default function HomeScreen() {
   ), [showCamera]);
 
   const ModalContent = useMemo(() => (
-    <View style={styles.emptyStateContainer}>
-      <Text style={styles.emptyStateText}>
-        Una vez seleccionada o tomada la foto tendrá una vista preliminar antes de guardar
-      </Text>
-    </View>
+    userPhoto ? (
+      <View style={styles.containerIcons}>
+        <IconsPatron uri={userPhoto} />
+      </View>
+    ) : (
+      <View style={styles.emptyStateContainer}>
+        <Text style={styles.emptyStateText}>
+          Una vez seleccionada o tomada la foto tendrá una vista preliminar antes de guardar
+        </Text>
+      </View>
+    )
   ), [userPhoto]);
 
   return (
@@ -228,5 +235,15 @@ const styles = StyleSheet.create({
   textInputStyle: {
     borderRadius: 50,
     borderColor: ColorOpacity(Colors.mainColor, 50),
+  },
+  containerIcons: {
+    width: '80%',
+    aspectRatio: 1,
+    alignSelf: 'center',
+    marginVertical: 20,
+    borderWidth: 2,
+    borderColor: Colors.mainColor,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
 });

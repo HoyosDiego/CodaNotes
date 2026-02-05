@@ -6,13 +6,14 @@ import { DescriptionNoteProps } from "./description-note.type";
 
 export default function DescriptionNote({
   items,
-  onLongPress
+  onLongPress,
+  onPress
 }:
   DescriptionNoteProps
 ) {
   return (
     <>
-      <Pressable onLongPress={onLongPress}>
+      <Pressable onLongPress={onLongPress} onPress={onPress}>
         <Card
           className={[styles.containerTitle, { backgroundColor: items?.bgcolor }]}
         >

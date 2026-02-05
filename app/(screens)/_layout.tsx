@@ -6,6 +6,7 @@ export default function MainLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="add-notes-screen" />
+      <Stack.Screen name="view-notes-screen" />
     </Stack>
   );
 }

@@ -71,6 +71,14 @@ export default function HomeScreen() {
     router.push("/add-notes-screen");
   }, [router]);
 
+  const handleGoToViewNote = useCallback(() => {
+    router.push("/view-notes-screen");
+  }, [router]);
+
+  const handlePressNote = useCallback((note: INote) => {
+    setSelectedNote(note);
+  }, [setSelectedNote]);
+
   const handleLongPressNote = useCallback((note: INote) => {
     setSelectedNote(note);
   }, [setSelectedNote]);
@@ -140,9 +148,7 @@ export default function HomeScreen() {
 
   const ModalContent = useMemo(() => (
     userPhoto ? (
-      <View style={styles.containerIcons}>
-        <IconsPatron uri={userPhoto} />
-      </View>
+      <IconsPatron uri={userPhoto} />
     ) : (
       <View style={styles.emptyStateContainer}>
         <Text style={styles.emptyStateText}>
@@ -180,6 +186,7 @@ export default function HomeScreen() {
               key={note.id}
               items={note}
               onLongPress={() => handleLongPressNote(note)}
+              onPress={handleGoToViewNote}
             />
           ))}
         </View>
@@ -245,14 +252,5 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderColor: ColorOpacity(Colors.mainColor, 50),
   },
-  containerIcons: {
-    width: 282,
-    height: 400,
-    alignSelf: 'center',
-    marginVertical: 20,
-    borderWidth: 2,
-    borderColor: Colors.mainColor,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
+
 });

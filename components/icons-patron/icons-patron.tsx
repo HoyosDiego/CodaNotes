@@ -2,51 +2,69 @@ import React, { useMemo, useState } from "react";
 import { Image, LayoutChangeEvent, View } from "react-native";
 import { styles } from "./icons-patron.style";
 
-// component can be reused in other parts such as the view of the notes
-
 interface IconsPatronProps {
-    // image URI
     uri: string;
-    // size of each icon in pixels, default is 40
     iconSize?: number;
-    // gap between icons in pixels, default is 15
     gap?: number;
 }
 
-export default function IconsPatron({ uri, iconSize = 40, gap = 15 }: IconsPatronProps) {
-    // here we calculate the number of icons that will be displayed
-    const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-
-    const iconsCount = useMemo(() => {
-        if (containerSize.width === 0 || containerSize.height === 0) return 0;
-
-        const itemWidth = iconSize + gap;
-        const itemHeight = iconSize + gap;
-
-        const columns = Math.ceil(containerSize.width / itemWidth);
-        const rows = Math.ceil(containerSize.height / itemHeight);
-
-        return (columns * rows) + columns;
-    }, [containerSize, iconSize, gap]);
-
+export default function IconsPatron({ uri, iconSize = 28, gap = 25 }: IconsPatronProps) {
+    const [widthLayout, setWithLayout] = useState(0);
+    const [heightLayout, setHeightLayout] = useState(0);
     const onLayout = (event: LayoutChangeEvent) => {
         const { width, height } = event.nativeEvent.layout;
-        setContainerSize({ width, height });
+        console.log('event.nativeEvent.layout ', event.nativeEvent.layout);
+        setWithLayout(width);
+        setHeightLayout(height);
     };
+
+    const iconSizeWithGap = iconSize + gap;
+    const iconSizewithWidth = Math.round(widthLayout / iconSizeWithGap);
+    const iconSizewithHeight = Math.round(heightLayout / iconSizeWithGap);
+
+    const IconsView = useMemo(() => {
+        if (widthLayout === 0 || heightLayout === 0) { return null; }
+
+        const columns = iconSizewithWidth;
+        const rows = iconSizewithHeight;
+        const icons = [];
+
+        for (let i = 0; i < columns; i++) {
+            for (let j = 0; j < rows; j++) {
+                const baseX = i * (iconSize + gap) + gap;
+                const baseY = j * (iconSize + gap) + gap;
+
+                const randomShift = gap * 0.5;
+                const finalX = baseX + (Math.random() - 0.8) * randomShift;
+                const finalY = baseY + (Math.random() - 0.8) * randomShift;
+
+                icons.push(
+                    <Image
+                        key={`${i}-${j}`}
+                        source={{ uri }}
+                        style={[
+                            styles.image,
+                            {
+                                position: 'absolute',
+                                width: iconSize,
+                                height: iconSize,
+                                borderRadius: iconSize / 2,
+                                left: finalX,
+                                right: finalX,
+                                top: finalY,
+                                transform: [{ rotate: `${Math.random() * 90}deg` }]
+                            }
+                        ]}
+                    />
+                );
+            }
+        }
+        return icons;
+    }, [widthLayout, heightLayout, uri, iconSize, gap]);
 
     return (
         <View style={styles.container} onLayout={onLayout}>
-            {containerSize.width > 0 && Array.from({ length: iconsCount }).map((_, index) => (
-                <Image
-                    key={index}
-                    source={{ uri }}
-                    style={[
-                        styles.image,
-                        { width: iconSize, height: iconSize, margin: gap / 2 }
-                    ]}
-                    resizeMode="contain"
-                />
-            ))}
+            {IconsView}
         </View>
     );
 }

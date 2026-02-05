@@ -3,4 +3,5 @@ export interface ICardUserInformationProps {
   user: User | null;
   qtyNotes: number;
   hasOpacity?: boolean;
+  handleSettings?: () => void;
 }

@@ -39,6 +39,7 @@ export default function HomeScreen() {
   const { saveUserToDb } = useAppDB();
   const [showCamera, setShowCamera] = useState(false);
   const [userPhoto, setUserPhoto] = useState<string | null>(null); // Para guardar la foto tomada
+  const [openModalSettingProfile, setOpenModalSettingsProfile] = useState<boolean>(false);
 
   const setSelectedNote = useSetAtom(selectedNoteAtom);
   const selectedNote = useAtomValue(selectedNoteAtom);
@@ -74,9 +75,13 @@ export default function HomeScreen() {
     setSelectedNote(note);
   }, [setSelectedNote]);
 
-  const isOpenModal = useMemo(() => !!selectedNote, [selectedNote]);
-  const handleCloseModal = useCallback(() => setSelectedNote(null), [setSelectedNote]);
+  const isOpenModal = useMemo(() => !!selectedNote || openModalSettingProfile, [selectedNote, openModalSettingProfile]);
 
+  const handleCloseModal = () => {
+    setUserPhoto(null);
+    setSelectedNote(null)
+    setOpenModalSettingsProfile(false);
+  }
   if (!isLoaded) {
     return (
       <View style={styles.loadingContainer}>
@@ -160,7 +165,10 @@ export default function HomeScreen() {
       ]}
     >
       <View style={styles.containerHome}>
-        <CardUserInformation user={userResolved} qtyNotes={selectedNote ? 0 : quantityNotes}
+        <CardUserInformation
+          user={userResolved}
+          qtyNotes={quantityNotes}
+          handleSettings={() => setOpenModalSettingsProfile(true)}
           hasOpacity={!!selectedNote}
         />
       </View>
@@ -187,6 +195,7 @@ export default function HomeScreen() {
           title={selectedNote?.title || ""}
           cameraAction={ModalSettings}
           content={ModalContent}
+          hasOpacity={!userPhoto}
         />
       </ModalUI>
     </View>
@@ -237,8 +246,8 @@ const styles = StyleSheet.create({
     borderColor: ColorOpacity(Colors.mainColor, 50),
   },
   containerIcons: {
-    width: '80%',
-    aspectRatio: 1,
+    width: 282,
+    height: 400,
     alignSelf: 'center',
     marginVertical: 20,
     borderWidth: 2,

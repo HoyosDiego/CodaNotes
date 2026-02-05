@@ -11,7 +11,8 @@ import { ICardUserInformationProps } from "./card-user-information.types";
 export function CardUserInformation({
   user,
   qtyNotes,
-  hasOpacity
+  hasOpacity,
+  handleSettings
 }: ICardUserInformationProps) {
   const [showCamera, setShowCamera] = useState(false);
   const [userPhoto, setUserPhoto] = useState<string | null>(null); // Para guardar la foto tomada
@@ -71,7 +72,7 @@ export function CardUserInformation({
                 name="settings-sharp"
                 color={Colors.whiteColor}
                 size={25}
-
+                onPress={handleSettings}
               />
             </View>
           </View>

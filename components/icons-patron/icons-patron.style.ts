@@ -12,6 +12,6 @@ export const styles = StyleSheet.create({
         height: "100%",
     },
     image: {
-        opacity: 0.15,
+        opacity: 0.2,
     }
 });

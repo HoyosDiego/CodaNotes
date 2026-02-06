@@ -5,10 +5,9 @@ import { UserModal } from "@/components/modal-register-user";
 import ThemedScrollContainer from "@/components/themed-scroll-container";
 import { ColorOpacity, Colors } from "@/constants";
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { useAppDB } from "@/hooks/useAppDB";
 import { INote, UserInput } from "@/services";
 import { notesListAtom, totalNotesCountAtom } from "@/state";
-import { isDbLoadedAtom } from "@/state/ui/uiAtoms";
+import { isDbLoadedAtom, selectedNoteAtom } from "@/state/ui/uiAtoms";
 import { userAtom } from "@/state/user/userAtoms";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -21,9 +20,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CameraComponent } from "@/components/camera/camera";
 import { IconsPatron } from "@/components/icons-patron";
 import { SettingsLongPressComponent } from "@/components/settings-long-press";
+import { InputText } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { ModalUI } from '@/components/ui/modal/modal';
-import { selectedNoteAtom } from '@/state/ui/uiAtoms';
+import { useHome } from "@/hooks";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
@@ -36,18 +36,12 @@ export default function HomeScreen() {
   const isLoaded = useAtomValue(isDbLoadedAtom);
   const insets = useSafeAreaInsets();
   const backgroundColor = useThemeColor({}, "background");
-  const { saveUserToDb } = useAppDB();
   const [showCamera, setShowCamera] = useState(false);
-  const [userPhoto, setUserPhoto] = useState<string | null>(null); // Para guardar la foto tomada
   const [openModalSettingProfile, setOpenModalSettingsProfile] = useState<boolean>(false);
-
   const setSelectedNote = useSetAtom(selectedNoteAtom);
   const selectedNote = useAtomValue(selectedNoteAtom);
-
-  const [userInfo, setUser] = useState<UserInput>({
-    name: "",
-    lastname: "",
-  });
+  const { userInfo, setUser,
+    handleSaveData, userPhoto, setUserPhoto } = useHome();
 
   const quantityNotes = useMemo(() => allNotes, [allNotes]);
 
@@ -55,17 +49,9 @@ export default function HomeScreen() {
     return user ?? { id: 0, name: "Usuario", lastname: "no registrado" };
   }, [user]);
 
-  const handleUserChange = useCallback((newInfo: UserInput) => {
-    setUser(newInfo);
-  }, []);
-
-  const handleSaveData = useCallback(async () => {
-    try {
-      await saveUserToDb(userInfo);
-    } catch (error) {
-      console.error("Error al guardar:", error);
-    }
-  }, [userInfo, saveUserToDb]);
+  const handleUserChange = (newInfo: UserInput) => {
+    setUser({ ...newInfo, photo_uri: userPhoto || '' });
+  };
 
   const handleGoToAddNotes = useCallback(() => {
     router.push("/add-notes-screen");
@@ -178,6 +164,18 @@ export default function HomeScreen() {
           hasOpacity={!!selectedNote}
         />
       </View>
+      <InputText
+        placeholder="Buscar por nombre o descripción"
+        containerStyle={styles.textInputStyle}
+        onChangeText={setSearchText}
+        rightIcon={
+          <Ionicons
+            name="search"
+            size={19}
+            color={ColorOpacity(Colors.icon, 70)}
+          />
+        }
+      />
 
       <ThemedScrollContainer style={styles.scrollContainer}>
         <View style={styles.containerNotes}>
@@ -212,10 +210,9 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   containerHome: {
-    flex: 0.4,
-    flexDirection: "column",
-    rowGap: 20,
+    height: 160,
     paddingHorizontal: 30,
+    marginBottom: 20,
   },
   containerNotes: {
     flexDirection: "column",
@@ -251,6 +248,7 @@ const styles = StyleSheet.create({
   textInputStyle: {
     borderRadius: 50,
     borderColor: ColorOpacity(Colors.mainColor, 50),
+    marginHorizontal: 30,
   },
 
 });

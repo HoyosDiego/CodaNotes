@@ -15,7 +15,7 @@ export function CardUserInformation({
   handleSettings
 }: ICardUserInformationProps) {
   const [showCamera, setShowCamera] = useState(false);
-  const [userPhoto, setUserPhoto] = useState<string | null>(null); // Para guardar la foto tomada
+  const [userPhoto, setUserPhoto] = useState<string | null>(null);
 
   return (
     <View style={{ ...styles.containerCards, opacity: !hasOpacity ? 1 : 0.5 }}>

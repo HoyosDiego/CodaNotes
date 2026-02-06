@@ -1,12 +1,13 @@
 import { countAllNotes, fetchNotes, getUser, initDB, INote, NoteInput, saveNote, saveUser, User, UserInput } from '@/services';
 import { isDbLoadedAtom, notesListAtom, totalNotesCountAtom, userAtom } from '@/state';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
 
 export const useAppDB = () => {
     const setNotesList = useSetAtom(notesListAtom);
     const setCountNotes = useSetAtom(totalNotesCountAtom);
     const setUser = useSetAtom(userAtom);
+    const user = useAtomValue(userAtom);
     const setIsDbLoaded = useSetAtom(isDbLoadedAtom);
 
     const actionAllNotes = useCallback(async () => {
@@ -23,13 +24,14 @@ export const useAppDB = () => {
             try {
                 await initDB();
 
-                const [user] = await Promise.all([
+                const [userData] = await Promise.all([
                     getUser(),
                 ]);
 
-                actionAllNotes();
-                setUser(user);
+                console.log({ userData });
 
+                actionAllNotes();
+                setUser(userData);
             } catch (error) {
                 console.error("Error while start query for user:", error);
             } finally {
@@ -37,7 +39,9 @@ export const useAppDB = () => {
             }
         };
 
-        loadInitialData();
+        if (!user) {
+            loadInitialData();
+        }
     }, [setNotesList, setUser, setIsDbLoaded]);
 
 

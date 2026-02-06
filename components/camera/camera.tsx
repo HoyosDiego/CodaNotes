@@ -35,6 +35,8 @@ export function CameraComponent({ onClose, onPhotoTaken }: CameraProps) {
       const data = await cameraRef.current.takePictureAsync({ quality: 0.5 });
 
       if (data?.uri) {
+        console.log('data.uri ', data.uri);
+
         setPhoto(data.uri);
       }
     }

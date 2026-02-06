@@ -1,19 +1,18 @@
 import React, { useMemo, useState } from "react";
 import { Image, LayoutChangeEvent, View } from "react-native";
 import { styles } from "./icons-patron.style";
+import { IconsPatronProps } from "./icons-patron.type";
 
-interface IconsPatronProps {
-    uri: string;
-    iconSize?: number;
-    gap?: number;
-}
-
-export default function IconsPatron({ uri, iconSize = 28, gap = 25 }: IconsPatronProps) {
+export default function IconsPatron({ uri, iconSize = 28, gap = 25, stylesContent }: IconsPatronProps) {
     const [widthLayout, setWithLayout] = useState(0);
     const [heightLayout, setHeightLayout] = useState(0);
+
+    if (uri === '') {
+        return null;
+    }
+
     const onLayout = (event: LayoutChangeEvent) => {
         const { width, height } = event.nativeEvent.layout;
-        console.log('event.nativeEvent.layout ', event.nativeEvent.layout);
         setWithLayout(width);
         setHeightLayout(height);
     };
@@ -63,7 +62,7 @@ export default function IconsPatron({ uri, iconSize = 28, gap = 25 }: IconsPatro
     }, [widthLayout, heightLayout, uri, iconSize, gap]);
 
     return (
-        <View style={styles.container} onLayout={onLayout}>
+        <View style={[styles.container, stylesContent]} onLayout={onLayout}>
             {IconsView}
         </View>
     );

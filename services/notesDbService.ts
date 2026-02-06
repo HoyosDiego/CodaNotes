@@ -1,12 +1,13 @@
 import * as SQLite from "expo-sqlite";
 import { ALL_CREATION_QUERIES } from "./create-table";
-import { INote, NoteInput, User, UserInput } from "./note.types";
+import { INote, NoteInput, } from "./note.types";
 import {
   INSERT_REPLACE_NOTE,
   INSERT_REPLACE_USER,
   SELECT_ALL_NOTES,
   SELECT_USER_BY_ID,
 } from "./queries";
+import { User, UserInput } from "./user.types";
 
 let db: SQLite.SQLiteDatabase | null = null;
 
@@ -30,7 +31,7 @@ export const fetchNotes = async (limit: number = 1000, offset: number = 0): Prom
   if (!db) throw new Error("Database not initialized. Call initDB first.");
 
   const notes = await db.getAllAsync<INote>(
-    "SELECT * FROM notes ORDER BY timestamp DESC LIMIT ? OFFSET ?;",
+    "SELECT * FROM notes ORDER BY timestamp ASC LIMIT ? OFFSET ?;",
     [limit, offset]
   );
 
@@ -44,7 +45,7 @@ export const countAllNotes = async (): Promise<number> => {
     "SELECT COUNT(*) FROM notes;"
   );
 
-  const allNotes=result[0]["COUNT(*)"] || 0
+  const allNotes = result[0]["COUNT(*)"] || 0
 
   return allNotes;
 };
@@ -72,7 +73,7 @@ export const saveNote = async (note: NoteInput): Promise<number> => {
 export const saveUser = async (user: UserInput): Promise<void> => {
   if (!db) throw new Error("Database not initialized. Call initDB first.");
 
-  await db.runAsync(INSERT_REPLACE_USER, user.name, user.lastname);
+  await db.runAsync(INSERT_REPLACE_USER, user.name, user.lastname, user.photo_uri ?? '');
 };
 
 export const getUser = async (): Promise<User | null> => {
@@ -80,11 +81,14 @@ export const getUser = async (): Promise<User | null> => {
 
   const row = await db.getFirstAsync<User>(SELECT_USER_BY_ID);
 
+  console.log('row ', row);
+
   if (!row) return null;
   const userObject: User = {
     id: row.id,
     name: row.name,
     lastname: row.lastname,
+    photo_uri: row.photo_uri,
   };
 
   return userObject;

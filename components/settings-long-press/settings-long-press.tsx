@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import { styles } from './settings-long-press.style';
 import { ISettingsLongPressProps } from './settings-long-press.type';
 
-export const SettingsLongPressComponent = ({ cameraAction, content, hasOpacity, title }: ISettingsLongPressProps) => {
+export const SettingsLongPressComponent = ({ cameraAction, content, hasOpacity, title, onUpdatePhotoNote }: ISettingsLongPressProps) => {
     return (
         <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
@@ -13,7 +13,10 @@ export const SettingsLongPressComponent = ({ cameraAction, content, hasOpacity, 
                 {cameraAction}
             </View>
             {content}
-            <Button style={{ ...styles.saveButton, backgroundColor: hasOpacity ? ColorOpacity(Colors.mainColor, 80) : Colors.mainColor }} >
+            <Button
+                style={{ ...styles.saveButton, backgroundColor: hasOpacity ? ColorOpacity(Colors.mainColor, 80) : Colors.mainColor }}
+                onPress={onUpdatePhotoNote}
+            >
                 <Text style={styles.saveButtonText}>GUARDAR</Text>
             </Button>
         </View>

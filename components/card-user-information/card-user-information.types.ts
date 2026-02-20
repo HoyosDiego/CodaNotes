@@ -4,4 +4,5 @@ export interface ICardUserInformationProps {
   qtyNotes: number;
   hasOpacity?: boolean;
   handleSettings?: () => void;
+  onUpdatePhotoUser?: (uri: string) => void;
 }

@@ -1,10 +1,15 @@
 export interface INote {
   id: number;
-  title: string;
-  content: string;
-  bgcolor: string;
+  title?: string;
+  content?: string;
+  bgcolor?: string;
   timestamp?: Date | number;
   photo_uri?: string | null;
+}
+
+export interface IUpdatePhotoNotes {
+  id: number;
+  photo_uri: string;
 }
 
 export interface NoteInput {

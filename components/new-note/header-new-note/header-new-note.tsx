@@ -6,7 +6,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { styles } from "./header-new-note.style";
 
-export function HeaderNewNote() {
+export function HeaderNewNote({ titleNote }: { titleNote: string }) {
   const router = useRouter();
   const textColor = useThemeColor({}, "text");
 
@@ -19,7 +19,7 @@ export function HeaderNewNote() {
       >
         <Ionicons name="arrow-back" size={24} color={textColor} />
       </Button>
-      <Text style={[styles.headerTitle, { color: textColor }]}>Nueva Nota</Text>
+      <Text style={[styles.headerTitle, { color: textColor }]}>{titleNote}</Text>
       <View style={{ width: 24 }} />
     </View>
   );

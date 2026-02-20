@@ -4,78 +4,77 @@ import DescriptionNote from "@/components/desciption-note/description-note";
 import { UserModal } from "@/components/modal-register-user";
 import ThemedScrollContainer from "@/components/themed-scroll-container";
 import { ColorOpacity, Colors } from "@/constants";
-import { useThemeColor } from "@/hooks/use-theme-color";
-import { INote, UserInput } from "@/services";
 import { notesListAtom, totalNotesCountAtom } from "@/state";
 import { isDbLoadedAtom, selectedNoteAtom } from "@/state/ui/uiAtoms";
 import { userAtom } from "@/state/user/userAtoms";
-import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import { useCallback, useMemo, useState } from "react";
-import { ActivityIndicator, Image, Modal, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ActivityIndicator, Image, Modal, Text, View } from "react-native";
 
 // Atoms and modals components
 import { CameraComponent } from "@/components/camera/camera";
+import { styles } from "@/components/container-home";
+import ContainerHomeComponent from "@/components/container-home/container-home.component";
 import { IconsPatron } from "@/components/icons-patron";
 import { SettingsLongPressComponent } from "@/components/settings-long-press";
+import { SettingsProfile } from "@/components/settings-profile";
 import { InputText } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { ModalUI } from '@/components/ui/modal/modal';
 import { useHome } from "@/hooks";
+import { useAppDB } from "@/hooks/useAppDB";
+import { handleGoToAddNotes, handleGoToViewNote, handleLongPressNote, handleUserChange } from "@/state/util";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
-  const router = useRouter();
-
   const [searchText, setSearchText] = useState("");
   const user = useAtomValue(userAtom);
   const allNotes = useAtomValue(totalNotesCountAtom);
   const notes = useAtomValue(notesListAtom);
   const isLoaded = useAtomValue(isDbLoadedAtom);
-  const insets = useSafeAreaInsets();
-  const backgroundColor = useThemeColor({}, "background");
   const [showCamera, setShowCamera] = useState(false);
-  const [openModalSettingProfile, setOpenModalSettingsProfile] = useState<boolean>(false);
+  const [openModalSetting, setOpenModalSettings] = useState<boolean>(false);
   const setSelectedNote = useSetAtom(selectedNoteAtom);
   const selectedNote = useAtomValue(selectedNoteAtom);
-  const { userInfo, setUser,
-    handleSaveData, userPhoto, setUserPhoto } = useHome();
-
+  const [openModalByProfile, setOpenModalByProfile] = useState<boolean>(false);
+  const { userInfo, setUserInfo,
+    handleSaveData, userPhoto, setUserPhoto, handleUpdateNote,
+    handleUpdateUser } = useHome();
+  const { selectNotesByFilterTodb } = useAppDB();
+  const [updateName, setUpdateName] = useState<string | undefined>('');
+  const [updateLastname, setUpdateLastname] = useState<string | undefined>('');
   const quantityNotes = useMemo(() => allNotes, [allNotes]);
 
   const userResolved = useMemo(() => {
     return user ?? { id: 0, name: "Usuario", lastname: "no registrado" };
   }, [user]);
 
-  const handleUserChange = (newInfo: UserInput) => {
-    setUser({ ...newInfo, photo_uri: userPhoto || '' });
-  };
-
-  const handleGoToAddNotes = useCallback(() => {
-    router.push("/add-notes-screen");
-  }, [router]);
-
-  const handleGoToViewNote = useCallback(() => {
-    router.push("/view-notes-screen");
-  }, [router]);
-
-  const handlePressNote = useCallback((note: INote) => {
-    setSelectedNote(note);
-  }, [setSelectedNote]);
-
-  const handleLongPressNote = useCallback((note: INote) => {
-    setSelectedNote(note);
-  }, [setSelectedNote]);
-
-  const isOpenModal = useMemo(() => !!selectedNote || openModalSettingProfile, [selectedNote, openModalSettingProfile]);
+  const isOpenModal = useMemo(() => openModalSetting, [openModalSetting]);
 
   const handleCloseModal = () => {
     setUserPhoto(null);
     setSelectedNote(null)
-    setOpenModalSettingsProfile(false);
+    setOpenModalSettings(false);
   }
+
+  const handleUpdateNoteById = () => {
+    if (selectedNote && userPhoto) {
+      handleUpdateNote();
+      handleCloseModal();
+    }
+  };
+
+  const filterNotes = useCallback((searchText: string) => {
+    const handler = setTimeout(() => {
+      selectNotesByFilterTodb(searchText)
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [selectNotesByFilterTodb]);
+
   if (!isLoaded) {
     return (
       <View style={styles.loadingContainer}>
@@ -89,7 +88,7 @@ export default function HomeScreen() {
     return (
       <UserModal
         userInformation={userInfo}
-        onchangeUser={handleUserChange}
+        onchangeUser={() => setUserInfo(handleUserChange(userInfo, userPhoto || undefined))}
         onSave={handleSaveData}
       />
     );
@@ -101,9 +100,17 @@ export default function HomeScreen() {
       onPress={() => setShowCamera(true)}
     >
       {userPhoto ? (
-        <Image source={{ uri: userPhoto }}
-          style={{ width: 65, height: 65, borderRadius: 50 }}
-        />
+        <View style={{ width: 90, height: 90, borderRadius: 50, marginTop: 10 }}>
+          <Image source={{ uri: userPhoto }}
+            style={{ flex: 1, borderRadius: 50 }}
+          />
+          <Ionicons
+            name="camera-sharp"
+            color={'#D9D9D9'}
+            size={60}
+            style={{ position: 'absolute', top: 14, right: 0, bottom: 0, left: 16, opacity: 0.3 }}
+          />
+        </View>
       ) : (
         <Ionicons
           name="camera-sharp"
@@ -144,30 +151,49 @@ export default function HomeScreen() {
     )
   ), [userPhoto]);
 
+  const isValidEditProfile = useMemo(() => {
+    return userPhoto || (userResolved.name && userResolved.lastname)
+  }, [userPhoto, userResolved])
+
+  const handleClickUpdateProfile = () => {
+    const userUpdated = {
+      name: updateName ?? userResolved.name,
+      lastname: updateLastname ?? userResolved.lastname,
+      photo_uri: userPhoto
+    };
+
+    handleUpdateUser(userUpdated);
+    setOpenModalSettings(false);
+  };
+
+  const handleUpdatePhotoUser = (uri: string) => {
+    const userUpdated = {
+      name: userResolved.name,
+      lastname: userResolved.lastname,
+      photo_uri: uri
+    };
+
+    handleUpdateUser(userUpdated);
+  };
+
   return (
-    <View
-      style={[
-        {
-          flex: 1,
-          backgroundColor,
-          paddingTop: insets.top,
-          paddingBottom: insets.bottom,
-        },
-        styles.container,
-      ]}
-    >
+    <ContainerHomeComponent>
       <View style={styles.containerHome}>
         <CardUserInformation
           user={userResolved}
           qtyNotes={quantityNotes}
-          handleSettings={() => setOpenModalSettingsProfile(true)}
-          hasOpacity={!!selectedNote}
+          handleSettings={() => {
+            setOpenModalByProfile(true)
+            setOpenModalSettings(true)
+          }}
+          onUpdatePhotoUser={handleUpdatePhotoUser}
+          hasOpacity={isOpenModal}
         />
       </View>
       <InputText
         placeholder="Buscar por nombre o descripción"
         containerStyle={styles.textInputStyle}
-        onChangeText={setSearchText}
+        onChangeText={filterNotes}
         rightIcon={
           <Ionicons
             name="search"
@@ -183,72 +209,43 @@ export default function HomeScreen() {
             <DescriptionNote
               key={note.id}
               items={note}
-              onLongPress={() => handleLongPressNote(note)}
-              onPress={handleGoToViewNote}
+              onLongPress={() => {
+                setOpenModalByProfile(false)
+                setOpenModalSettings(true);
+                setSelectedNote(handleLongPressNote(note))
+              }}
+              onPress={() => {
+                setSelectedNote(note);
+                handleGoToViewNote()
+              }}
             />
           ))}
         </View>
       </ThemedScrollContainer>
-      <AddNewNote onPress={handleGoToAddNotes} isDisabled={!!selectedNote} />
+      <AddNewNote onPress={() => handleGoToAddNotes()} isDisabled={isOpenModal} />
 
       <ModalUI
-        // The !!selectedNote is to convert the selectedNote to a boolean
         isOpen={isOpenModal}
         onClose={handleCloseModal}
       >
-        <SettingsLongPressComponent
-          title={selectedNote?.title || ""}
-          cameraAction={ModalSettings}
-          content={ModalContent}
-          hasOpacity={!userPhoto}
-        />
+        {openModalByProfile ?
+          <SettingsProfile
+            hasOpacity={!isValidEditProfile}
+            name={userResolved.name || ''}
+            lastname={userResolved?.lastname || ''}
+            cameraAction={ModalSettings}
+            onUpdateName={setUpdateName}
+            onUpdateLastname={setUpdateLastname}
+            onClickUpdateUser={handleClickUpdateProfile}
+          />
+          : <SettingsLongPressComponent
+            title={selectedNote?.title || ""}
+            cameraAction={ModalSettings}
+            content={ModalContent}
+            hasOpacity={!userPhoto}
+            onUpdatePhotoNote={handleUpdateNoteById}
+          />}
       </ModalUI>
-    </View>
+    </ContainerHomeComponent>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  containerHome: {
-    height: 160,
-    paddingHorizontal: 30,
-    marginBottom: 20,
-  },
-  containerNotes: {
-    flexDirection: "column",
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.whiteColor,
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: Colors.grayColor,
-  },
-  scrollContainer: {
-    paddingTop: 15,
-  },
-  emptyStateContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 30,
-  },
-  emptyStateText: {
-    textAlign: 'center',
-    color: '#797979',
-    fontSize: 20,
-    fontWeight: '900',
-    marginTop: 20,
-    paddingHorizontal: 30,
-    lineHeight: 30,
-  },
-  textInputStyle: {
-    borderRadius: 50,
-    borderColor: ColorOpacity(Colors.mainColor, 50),
-    marginHorizontal: 30,
-  },
-
-});

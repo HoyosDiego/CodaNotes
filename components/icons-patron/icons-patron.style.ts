@@ -17,6 +17,6 @@ export const styles = StyleSheet.create({
         marginVertical: 20,
     },
     image: {
-        opacity: 0.1,
+        opacity: 0.2,
     }
 });

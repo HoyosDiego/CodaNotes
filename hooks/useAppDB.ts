@@ -1,4 +1,4 @@
-import { countAllNotes, fetchNotes, getUser, initDB, INote, NoteInput, saveNote, saveUser, User, UserInput } from '@/services';
+import { countAllNotes, fetchNotes, getUser, initDB, INote, IUpdatePhotoNotes, NoteInput, saveNote, saveUser, selectNotesByFilter, updatePhotoNote, updateUser, User, UserInput } from '@/services';
 import { isDbLoadedAtom, notesListAtom, totalNotesCountAtom, userAtom } from '@/state';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect } from 'react';
@@ -28,8 +28,6 @@ export const useAppDB = () => {
                     getUser(),
                 ]);
 
-                console.log({ userData });
-
                 actionAllNotes();
                 setUser(userData);
             } catch (error) {
@@ -42,9 +40,7 @@ export const useAppDB = () => {
         if (!user) {
             loadInitialData();
         }
-    }, [setNotesList, setUser, setIsDbLoaded]);
-
-
+    }, [setUser, setIsDbLoaded]);
 
     const saveUserToDb = useCallback(async (userInput: UserInput) => {
         await saveUser(userInput);
@@ -86,9 +82,43 @@ export const useAppDB = () => {
         return updatedNote;
     }, [setNotesList]);
 
+    const updatePhotoNoteToDb = useCallback(async (noteObject: IUpdatePhotoNotes): Promise<IUpdatePhotoNotes> => {
+
+        const finalId = await updatePhotoNote(noteObject);
+
+        const updatedNote: IUpdatePhotoNotes = {
+            id: finalId!,
+            photo_uri: noteObject.photo_uri
+        } as IUpdatePhotoNotes;
+
+        setNotesList(prevNotes => {
+            const existingIndex = prevNotes.findIndex(n => n.id === finalId);
+
+            if (existingIndex > -1) {
+                prevNotes[existingIndex].photo_uri = updatedNote.photo_uri;
+                return prevNotes;
+            } else {
+                return [updatedNote, ...prevNotes];
+            }
+        });
+        actionAllNotes();
+        return updatedNote
+    }, [setNotesList]);
+
+    const updateUserToDb = async (user: UserInput) => {
+        await updateUser(user);
+    };
+
+    const selectNotesByFilterTodb = async (searchText: string) => {
+        const notes = await selectNotesByFilter(searchText);
+        setNotesList(notes);
+    };
 
     return {
         saveUserToDb,
         saveNoteToDb,
+        updatePhotoNoteToDb,
+        updateUserToDb,
+        selectNotesByFilterTodb
     };
 };

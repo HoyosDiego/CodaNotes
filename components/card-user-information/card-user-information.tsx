@@ -12,10 +12,10 @@ export function CardUserInformation({
   user,
   qtyNotes,
   hasOpacity,
-  handleSettings
+  handleSettings,
+  onUpdatePhotoUser
 }: ICardUserInformationProps) {
   const [showCamera, setShowCamera] = useState(false);
-  const [userPhoto, setUserPhoto] = useState<string | null>(null);
 
   return (
     <View style={{ ...styles.containerCards, opacity: !hasOpacity ? 1 : 0.5 }}>
@@ -24,7 +24,7 @@ export function CardUserInformation({
           <CameraComponent
             onClose={() => setShowCamera(false)}
             onPhotoTaken={(uri) => {
-              setUserPhoto(uri);
+              onUpdatePhotoUser?.(uri);
               setShowCamera(false);
             }}
           />
@@ -54,8 +54,8 @@ export function CardUserInformation({
               style={styles.imageContainer}
               onPress={() => setShowCamera(true)}
             >
-              {userPhoto ? (
-                <Image source={{ uri: userPhoto }} style={styles.photoStyle} />
+              {user?.photo_uri ? (
+                <Image source={{ uri: user?.photo_uri }} style={styles.photoStyle} />
               ) : (
                 <Ionicons
                   name="camera-sharp"

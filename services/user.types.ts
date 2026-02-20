@@ -1,5 +1,5 @@
 export interface User {
-    id: number;
+    id?: number;
     name: string;
     lastname: string;
     photo_uri?: string;
@@ -8,5 +8,5 @@ export interface User {
 export interface UserInput {
     name: string;
     lastname: string;
-    photo_uri?: string;
+    photo_uri?: string | null;
 }

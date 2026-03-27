@@ -1,19 +1,22 @@
 import * as SQLite from "expo-sqlite";
 import { ALL_CREATION_QUERIES } from "./create-table";
-import { INote, NoteInput, User, UserInput } from "./note.types";
+import { INote, IUpdatePhotoNotes, NoteInput, } from "./note.types";
 import {
   INSERT_REPLACE_NOTE,
   INSERT_REPLACE_USER,
   SELECT_ALL_NOTES,
   SELECT_USER_BY_ID,
+  UPDATE_PHOTO_NOTE,
 } from "./queries";
+import { SELECT_NOTES_BY_FILTER } from "./queries/Notes/selectNotesByFilter.sql";
+import { UPDATE_USER } from "./queries/User/updateUser.sql";
+import { User, UserInput } from "./user.types";
 
 let db: SQLite.SQLiteDatabase | null = null;
 
 export const initDB = async (): Promise<void> => {
   try {
     db = await SQLite.openDatabaseAsync("coda_notes");
-
     const creationSql = ALL_CREATION_QUERIES.join("\n");
 
     await db.execAsync(`
@@ -30,7 +33,7 @@ export const fetchNotes = async (limit: number = 1000, offset: number = 0): Prom
   if (!db) throw new Error("Database not initialized. Call initDB first.");
 
   const notes = await db.getAllAsync<INote>(
-    "SELECT * FROM notes ORDER BY timestamp DESC LIMIT ? OFFSET ?;",
+    "SELECT * FROM notes ORDER BY timestamp ASC LIMIT ? OFFSET ?;",
     [limit, offset]
   );
 
@@ -44,7 +47,7 @@ export const countAllNotes = async (): Promise<number> => {
     "SELECT COUNT(*) FROM notes;"
   );
 
-  const allNotes=result[0]["COUNT(*)"] || 0
+  const allNotes = result[0]["COUNT(*)"] || 0
 
   return allNotes;
 };
@@ -72,7 +75,9 @@ export const saveNote = async (note: NoteInput): Promise<number> => {
 export const saveUser = async (user: UserInput): Promise<void> => {
   if (!db) throw new Error("Database not initialized. Call initDB first.");
 
-  await db.runAsync(INSERT_REPLACE_USER, user.name, user.lastname);
+  const { name, lastname, photo_uri } = user;
+
+  await db.runAsync(INSERT_REPLACE_USER, name, lastname, photo_uri ?? '');
 };
 
 export const getUser = async (): Promise<User | null> => {
@@ -85,6 +90,7 @@ export const getUser = async (): Promise<User | null> => {
     id: row.id,
     name: row.name,
     lastname: row.lastname,
+    photo_uri: row.photo_uri
   };
 
   return userObject;
@@ -101,12 +107,43 @@ export const getNotes = async (): Promise<INote | null> => {
     title: row.title,
     bgcolor: row.bgcolor,
     content: row.content,
+    photo_uri: row?.photo_uri || '',
   };
 
   return notesObject;
 };
 
+export const updatePhotoNote = async (note: IUpdatePhotoNotes): Promise<number> => {
+  if (!db) throw new Error("Database not initialized. Call initDB first.");
+
+  const { id, photo_uri } = note;
+
+  const result = await db.runAsync(UPDATE_PHOTO_NOTE, photo_uri ?? '', id);
+
+  const finalId = result.lastInsertRowId || (note.id as number);
+
+  return finalId;
+};
+
+export const updateUser = async (user: UserInput): Promise<void> => {
+  if (!db) throw new Error("Database not initialized. Call initDB first.");
+
+  const { name, lastname, photo_uri } = user;
+
+  await db.runAsync(UPDATE_USER, name, lastname, photo_uri ?? '');
+};
+
+export const selectNotesByFilter = async (searchText: string): Promise<INote[]> => {
+  if (!db) throw new Error("Database not initialized. Call initDB first.");
+
+  const notes = await db.getAllAsync<INote>(SELECT_NOTES_BY_FILTER, [searchText]);
+
+  return notes;
+};
+
 export const userDB = {
   saveUser,
   getUser,
+  updatePhotoNote,
+  selectNotesByFilter
 };

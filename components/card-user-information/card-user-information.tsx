@@ -11,18 +11,20 @@ import { ICardUserInformationProps } from "./card-user-information.types";
 export function CardUserInformation({
   user,
   qtyNotes,
+  hasOpacity,
+  handleSettings,
+  onUpdatePhotoUser
 }: ICardUserInformationProps) {
   const [showCamera, setShowCamera] = useState(false);
-  const [userPhoto, setUserPhoto] = useState<string | null>(null); // Para guardar la foto tomada
 
   return (
-    <View style={styles.containerCards}>
+    <View style={{ ...styles.containerCards, opacity: !hasOpacity ? 1 : 0.5 }}>
       {showCamera && (
         <Modal visible={showCamera} animationType="slide" transparent={false}>
           <CameraComponent
             onClose={() => setShowCamera(false)}
             onPhotoTaken={(uri) => {
-              setUserPhoto(uri);
+              onUpdatePhotoUser?.(uri);
               setShowCamera(false);
             }}
           />
@@ -52,8 +54,8 @@ export function CardUserInformation({
               style={styles.imageContainer}
               onPress={() => setShowCamera(true)}
             >
-              {userPhoto ? (
-                <Image source={{ uri: userPhoto }} style={styles.photoStyle} />
+              {user?.photo_uri ? (
+                <Image source={{ uri: user?.photo_uri }} style={styles.photoStyle} />
               ) : (
                 <Ionicons
                   name="camera-sharp"
@@ -70,7 +72,7 @@ export function CardUserInformation({
                 name="settings-sharp"
                 color={Colors.whiteColor}
                 size={25}
-
+                onPress={handleSettings}
               />
             </View>
           </View>

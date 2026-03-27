@@ -4,6 +4,7 @@ export const CREATE_NOTES_TABLE = `
         title TEXT NOT NULL, 
         content TEXT NOT NULL, 
         bgcolor TEXT NOT NULL,
-        timestamp INTEGER NOT NULL
+        timestamp INTEGER NOT NULL,
+        photo_uri TEXT
     );
 `;
